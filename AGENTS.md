@@ -18,6 +18,7 @@
 - Mantener estilo consistente con ESLint/Prettier del proyecto.
 - Antes de push a `main`, ejecutar como minimo `pnpm build`.
 - Si falla `build` o `lint`, no avanzar a deploy hasta corregir.
+- Para cambios de backoffice/DB: ejecutar `npx prisma generate` y aplicar migraciones en entorno local antes de merge.
 
 ## 3) Definition of Done (DoD)
 
@@ -55,3 +56,32 @@
 5. Verificar estado:
    - `pm2 status`
    - `curl -I http://127.0.0.1:<PUERTO>`
+
+## 6) Backoffice landing (Prisma + Postgres)
+
+- Credenciales admin via variables de entorno:
+  - `ADMIN_EMAIL`
+  - `ADMIN_PASSWORD_HASH` (recomendado para produccion)
+  - `ADMIN_PASSWORD_PLAIN` solo en desarrollo (`NODE_ENV !== production`)
+  - `AUTH_SECRET` para firmar cookie de sesion admin
+- DB obligatoria:
+  - `DATABASE_URL` apuntando a PostgreSQL
+- Modelo MVP:
+  - `Tenant`, `AdminUser`, `LandingPage`, `LandingPublish`
+- Flujo:
+  - Se edita `DRAFT` en `/admin/landing`
+  - `Publicar` copia a `PUBLISHED` y crea snapshot en `LandingPublish`
+
+## 7) Comandos de inicializacion y migracion
+
+- Desarrollo local:
+  - `pnpm install`
+  - `npx prisma generate`
+  - `npx prisma migrate dev --name <descripcion>`
+  - `pnpm db:seed` (o `npx prisma db seed`)
+- Produccion (VPS release/current):
+  - `npx prisma migrate deploy`
+  - `npx prisma db seed` (solo si aplica en arranque inicial)
+- Validacion minima pre-deploy:
+  - `pnpm lint`
+  - `pnpm build`
