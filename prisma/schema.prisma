@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  EDITOR
+}
+
+enum LandingStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Tenant {
+  id           String         @id @default(cuid())
+  domain       String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  adminUsers   AdminUser[]
+  landingPages LandingPage[]
+  publishes    LandingPublish[]
+}
+
+model AdminUser {
+  id               String           @id @default(cuid())
+  tenantId         String
+  tenant           Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  email            String
+  passwordHash     String
+  role             AdminRole        @default(EDITOR)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  landingUpdates   LandingPage[]    @relation("LandingUpdatedBy")
+  landingPublishes LandingPublish[] @relation("LandingPublishedBy")
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model LandingPage {
+  id          String        @id @default(cuid())
+  tenantId    String
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  status      LandingStatus
+  data        Json
+  seo         Json
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  updatedById String?
+  updatedBy   AdminUser?    @relation("LandingUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, status])
+  @@index([tenantId, status])
+}
+
+model LandingPublish {
+  id            String     @id @default(cuid())
+  tenantId      String
+  tenant        Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  publishedAt   DateTime   @default(now())
+  data          Json
+  seo           Json
+  publishedById String?
+  publishedBy   AdminUser? @relation("LandingPublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, publishedAt(sort: Desc)])
+}
