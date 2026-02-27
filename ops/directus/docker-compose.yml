@@ -1,0 +1,13 @@
+services:
+  directus:
+    image: directus/directus:11.5.1
+    container_name: poweramazonica-directus
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8055:8055"
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+      - ./templates:/directus/templates

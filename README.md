@@ -19,6 +19,7 @@ Architecture and delivery docs:
 - [Architecture Baseline](./docs/architecture.md)
 - [Implementation Roadmap](./docs/implementation-roadmap.md)
 - [CMS Editor Guide](./docs/cms-editor-guide.md)
+- [Directus VPS Setup](./docs/directus-vps-setup.md)
 
 ## Local Development
 
