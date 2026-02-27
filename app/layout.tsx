@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
+
+import { getPublishedSeoForDomain } from "@/lib/content";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,19 +16,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Power Amazónica | Proyecto Santa Beatriz – Lotes de 150 m² en Chanchamayo",
-  description:
-    "Conoce el Proyecto Urb. Santa Beatriz de Power Amazonica: lotes de 150 m2 en Chanchamayo, con papeles en regla, contrato notarial y facilidades de pago. Agenda tu visita por WhatsApp, llamada o correo.",
-  openGraph: {
-    title:
-      "Power Amazónica | Proyecto Santa Beatriz – Lotes de 150 m² en Chanchamayo",
-    description:
-      "Proyecto Urb. Santa Beatriz en Chanchamayo: lotes de 150 m2, papeles en regla, contrato notarial y facilidades de pago.",
-    type: "website",
-    locale: "es_PE",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headerStore = await headers();
+  const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host");
+  const seo = await getPublishedSeoForDomain(host);
+
+  return {
+    title: seo.title,
+    description: seo.description,
+    openGraph: {
+      title: seo.ogTitle,
+      description: seo.ogDescription,
+      type: "website",
+      locale: "es_PE",
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -33,9 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
