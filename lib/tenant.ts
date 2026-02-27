@@ -14,7 +14,7 @@ export function normalizeDomain(rawHost?: string | null): string {
   return withoutPort || process.env.DEFAULT_TENANT_DOMAIN || LOCAL_DEFAULT_DOMAIN;
 }
 
-export async function resolveTenantByDomain(domainInput: string): Promise<Tenant> {
+export async function resolveTenantByDomain(domainInput?: string | null): Promise<Tenant> {
   const domain = normalizeDomain(domainInput);
 
   return prisma.tenant.upsert({
