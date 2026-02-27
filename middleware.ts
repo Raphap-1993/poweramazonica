@@ -17,11 +17,6 @@ export function middleware(request: NextRequest) {
   const hasSessionCookie = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE)?.value);
 
   if (PUBLIC_ADMIN_PATHS.has(pathname)) {
-    if (pathname === "/admin/login" && hasSessionCookie) {
-      const dashboardUrl = new URL("/admin", request.url);
-      return NextResponse.redirect(dashboardUrl);
-    }
-
     return NextResponse.next();
   }
 
