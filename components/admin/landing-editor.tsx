@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { landingDraftPayloadSchema } from "@/lib/content";
+import { landingDraftPayloadSchema } from "@/lib/content/schemas";
 import type { LandingDraftPayload, LandingPageRecord } from "@/lib/content/types";
 
 const EMPTY_HERO = {
