@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight, MapPin, PhoneCall } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { OptimizedMedia } from "@/components/landing/optimized-media";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { HeroSlide } from "@/lib/content/types";
@@ -44,6 +45,15 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
 
     return () => window.clearInterval(intervalId);
   }, [normalizedSlides.length]);
+
+  useEffect(() => {
+    const imageUrls = normalizedSlides.map((slide) => slide.imageUrl?.trim()).filter(Boolean);
+    imageUrls.forEach((url) => {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = url as string;
+    });
+  }, [normalizedSlides]);
 
   function goToPrevious() {
     setActiveIndex((current) =>
@@ -111,22 +121,15 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
           </div>
 
           <div className="relative">
-            <div className="relative flex min-h-[300px] items-end overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-700 via-emerald-600 to-lime-600 p-4 sm:min-h-[360px] sm:p-6">
-              <div className="absolute inset-0 opacity-90">
-                {activeSlide.imageUrl ? (
-                  <div
-                    className="h-full w-full bg-cover bg-center"
-                    style={{ backgroundImage: `url(${activeSlide.imageUrl})` }}
-                    role="img"
-                    aria-label={activeSlide.title}
-                  />
-                ) : (
-                  <div className="h-full w-full bg-[radial-gradient(circle_at_20%_25%,rgba(255,255,255,0.25),transparent_42%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.2),transparent_35%),linear-gradient(140deg,#166534,#3f6212)]" />
-                )}
-              </div>
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-
+            <div className="relative min-h-[300px] overflow-hidden rounded-2xl border border-emerald-200 p-4 sm:min-h-[360px] sm:p-6">
+              <OptimizedMedia
+                src={activeSlide.imageUrl}
+                alt={activeSlide.title}
+                priority={activeIndex === 0}
+                sizes="(max-width: 1024px) 100vw, 46vw"
+                quality={74}
+                className="absolute inset-0 h-full w-full"
+              />
               <div className="relative z-10 w-full space-y-3">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/20 px-3 py-1 text-xs text-white backdrop-blur">
                   <MapPin className="h-3.5 w-3.5" />

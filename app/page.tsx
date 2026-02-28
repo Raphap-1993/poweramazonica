@@ -16,7 +16,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f7fef2_0%,#f6faf7_40%,#ffffff_100%)]">
       <LandingPageContent data={landing.data} />
     </div>
   );

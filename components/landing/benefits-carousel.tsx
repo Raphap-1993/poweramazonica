@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef } from "react";
 
+import { OptimizedMedia } from "@/components/landing/optimized-media";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import type { FeatureItem } from "@/lib/content/types";
 
 type BenefitsCarouselProps = {
   items: FeatureItem[];
+  referenceImageUrl?: string;
 };
 
 const fallbackBenefits: FeatureItem[] = [
@@ -23,7 +25,7 @@ const fallbackBenefits: FeatureItem[] = [
   },
 ];
 
-export function BenefitsCarousel({ items }: BenefitsCarouselProps) {
+export function BenefitsCarousel({ items, referenceImageUrl }: BenefitsCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cards = items.length > 0 ? items : fallbackBenefits;
 
@@ -43,8 +45,8 @@ export function BenefitsCarousel({ items }: BenefitsCarouselProps) {
     <section className="space-y-5">
       <div className="flex items-end justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight">Bonos y Beneficios</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">Bonos y Beneficios</h2>
+          <p className="text-zinc-600">
             Beneficios que fortalecen tu decisión de inversión en Santa Beatriz.
           </p>
         </div>
@@ -54,6 +56,7 @@ export function BenefitsCarousel({ items }: BenefitsCarouselProps) {
             type="button"
             size="icon"
             variant="outline"
+            className="border-emerald-200 bg-white text-emerald-900 hover:bg-emerald-50"
             onClick={() => scrollBy("left")}
             aria-label="Desplazar beneficios a la izquierda"
           >
@@ -63,6 +66,7 @@ export function BenefitsCarousel({ items }: BenefitsCarouselProps) {
             type="button"
             size="icon"
             variant="outline"
+            className="border-emerald-200 bg-white text-emerald-900 hover:bg-emerald-50"
             onClick={() => scrollBy("right")}
             aria-label="Desplazar beneficios a la derecha"
           >
@@ -75,19 +79,30 @@ export function BenefitsCarousel({ items }: BenefitsCarouselProps) {
         {cards.map((item, index) => (
           <Card
             key={`${item.title}-${index}`}
-            className="min-w-[88%] snap-center rounded-2xl border shadow-sm sm:min-w-[70%] lg:min-w-[46%]"
+            className="group min-w-[88%] snap-center overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-[0_18px_50px_-42px_rgba(21,128,61,0.55)] sm:min-w-[70%] lg:min-w-[46%]"
           >
             <CardHeader>
               <div className="flex items-center justify-between gap-2">
-                <Badge variant="secondary">Beneficio {index + 1}</Badge>
-                <Badge variant="outline">Santa Beatriz</Badge>
+                <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">
+                  Beneficio {index + 1}
+                </Badge>
+                <Badge variant="outline" className="border-emerald-200 text-emerald-900">
+                  Santa Beatriz
+                </Badge>
               </div>
-              <CardTitle className="text-2xl leading-tight">{item.title}</CardTitle>
+              <CardTitle className="text-2xl leading-tight text-zinc-950">{item.title}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-muted-foreground">{item.description}</p>
-              <div className="flex min-h-40 items-center justify-center rounded-xl border border-dashed bg-muted/35 px-4 text-center text-xs text-muted-foreground">
-                Colocar imagen real de beneficio en <code>/public</code>
+              <p className="text-zinc-600">{item.description}</p>
+
+              <div className="relative min-h-40 overflow-hidden rounded-2xl border border-emerald-100">
+                <OptimizedMedia
+                  src={referenceImageUrl}
+                  alt={item.title}
+                  sizes="(max-width: 1024px) 88vw, 32vw"
+                  className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
+                  fallbackLabel="Colocar imagen real de beneficio en /public"
+                />
               </div>
             </CardContent>
           </Card>

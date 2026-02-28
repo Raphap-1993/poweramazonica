@@ -10,7 +10,7 @@ export const SUPPORTED_IMAGE_MIME_TYPES = new Set([
 export type UploadKind = "hero" | "generic";
 
 const DEFAULT_UPLOAD_MAX_MB = 8;
-const DEFAULT_QUALITY = 82;
+const DEFAULT_QUALITY = 76;
 
 function parseEnvInt(input: string | undefined, fallback: number, min: number, max: number): number {
   if (!input) {
@@ -31,7 +31,7 @@ export function getUploadMaxBytes(): number {
 }
 
 function getImageQuality(): number {
-  return parseEnvInt(process.env.UPLOAD_IMAGE_QUALITY, DEFAULT_QUALITY, 50, 90);
+  return parseEnvInt(process.env.UPLOAD_IMAGE_QUALITY, DEFAULT_QUALITY, 45, 90);
 }
 
 export function getUploadTransformOptions(kind: UploadKind) {
@@ -39,15 +39,15 @@ export function getUploadTransformOptions(kind: UploadKind) {
 
   if (kind === "hero") {
     return {
-      maxWidth: 1920,
-      maxHeight: 1080,
+      maxWidth: 1600,
+      maxHeight: 900,
       quality,
     };
   }
 
   return {
-    maxWidth: 1600,
-    maxHeight: 1600,
+    maxWidth: 1280,
+    maxHeight: 1280,
     quality,
   };
 }

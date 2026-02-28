@@ -1,3 +1,5 @@
+import { ArrowUpRight, Building2, Landmark, Mail, MapPin, PhoneCall, ShieldCheck, Trees } from "lucide-react";
+
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BenefitsCarousel } from "@/components/landing/benefits-carousel";
 import { LeadCaptureForm } from "@/components/landing/lead-capture-form";
+import { OptimizedMedia } from "@/components/landing/optimized-media";
 import { PremiumHeroSlider } from "@/components/landing/premium-hero-slider";
 import type { HeroSlide, LandingData } from "@/lib/content/types";
 import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
@@ -22,27 +25,39 @@ const paymentOptions = [
   "Crédito MiVivienda",
   "Cuota inicial mínima",
   "Al contado",
-  "Cuotas hasta 60",
+  "Hasta 60 cuotas",
 ];
 
 const trustTips = [
   "Compra con contrato notarial y documentación en regla.",
-  "Proyecto con enfoque urbano y acceso a zonas clave de Chanchamayo.",
-  "Atención comercial directa para evaluación de alternativas de pago.",
-  "Alta proyección de valorización en zona estratégica.",
+  "Proyecto con acceso a comercios, instituciones educativas y terminal terrestre.",
+  "Atención comercial directa para evaluar alternativas de pago.",
+  "Zona con alta proyección de valorización en Chanchamayo.",
+];
+
+const instagramMockCards = [
+  "Comunidad y visitas al proyecto",
+  "Actualizaciones comerciales",
+  "Avances de infraestructura",
 ];
 
 const blogPlaceholders = [
   {
     title: "Cómo evaluar un lote con enfoque de valorización",
     description:
-      "Checklist básico para analizar ubicación, accesos y entorno urbano antes de comprar.",
+      "Aspectos clave de ubicación, accesos y formalidad para tomar una mejor decisión de compra.",
   },
   {
     title: "Guía rápida de financiamiento con MiVivienda",
-    description:
-      "Aspectos clave para preparar tu evaluación y ordenar tu documentación.",
+    description: "Recomendaciones prácticas para preparar tu evaluación y tu documentación.",
   },
+];
+
+const trustStats = [
+  { label: "Fundada", value: "2018", icon: Building2 },
+  { label: "Viviendas entregadas", value: "8", icon: ShieldCheck },
+  { label: "Ciudades de operación", value: "3", icon: MapPin },
+  { label: "Proyecto actual", value: "Santa Beatriz", icon: Trees },
 ];
 
 function toTelHref(phone: string): string {
@@ -64,9 +79,9 @@ function normalizeHeroSlides(dataSlides: HeroSlide[], whatsappHref: string): Her
       imageUrl: "",
     },
     {
-      title: "Corporación Power Amazónica S.A.C.",
+      title: "Formalidad y respaldo comercial",
       subtitle:
-        "Fundada en 2018, con operaciones en Chanchamayo, Satipo y Oxapampa; 8 viviendas construidas y entregadas.",
+        "Contrato notarial, papeles en regla y acompañamiento directo en el proceso de compra.",
       ctaText: "Hablar con un asesor",
       ctaHref: whatsappHref,
       imageUrl: "",
@@ -74,8 +89,8 @@ function normalizeHeroSlides(dataSlides: HeroSlide[], whatsappHref: string): Her
     {
       title: "Facilidades de pago para avanzar hoy",
       subtitle:
-        "Opciones con Crédito MiVivienda, cuota inicial mínima, al contado o cuotas hasta 60.",
-      ctaText: "Quiero información",
+        "Opciones con Crédito MiVivienda, cuota inicial mínima, al contado o financiamiento en cuotas.",
+      ctaText: "Solicitar información",
       ctaHref: whatsappHref,
       imageUrl: "",
     },
@@ -99,27 +114,41 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
   const telHref = toTelHref(phone);
   const mailtoHref = email ? `mailto:${email}` : LANDING_LINKS.mailtoHref;
   const heroSlides = normalizeHeroSlides(data.heroSlider, whatsappHref);
+  const referenceImageUrl = heroSlides.find((slide) => slide.imageUrl?.trim())?.imageUrl ?? "";
 
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-10 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-      <PremiumHeroSlider slides={heroSlides} telHref={telHref} />
+    <main className="relative mx-auto w-full max-w-6xl space-y-9 px-4 py-8 sm:px-6 lg:space-y-12 lg:px-8 lg:py-10">
+      <div className="pointer-events-none absolute inset-x-0 -top-40 z-0 h-80 bg-[radial-gradient(circle,_rgba(132,204,22,0.18)_0%,_transparent_70%)]" />
 
-      <BenefitsCarousel items={data.features} />
+      <section className="relative z-10">
+        <PremiumHeroSlider slides={heroSlides} telHref={telHref} />
+      </section>
 
-      <section className="relative overflow-hidden rounded-3xl border bg-gradient-to-b from-emerald-950/90 via-emerald-900/80 to-emerald-950/95 p-6 text-white shadow-sm sm:p-8 lg:p-10">
-        <div className="absolute inset-0 opacity-15">
-          <div className="h-full w-full bg-[radial-gradient(circle_at_top,_#ffffff_0%,_transparent_58%)]" />
-        </div>
+      <section className="relative z-10">
+        <BenefitsCarousel items={data.features} referenceImageUrl={referenceImageUrl} />
+      </section>
 
-        <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-5">
+      <section className="relative z-10 overflow-hidden rounded-[2rem] border border-emerald-900/20 bg-emerald-950 px-5 py-6 shadow-[0_28px_80px_-55px_rgba(6,78,59,0.9)] sm:px-7 sm:py-8 lg:px-8">
+        <OptimizedMedia
+          src={referenceImageUrl}
+          alt="Vista referencial de Santa Beatriz"
+          priority
+          sizes="100vw"
+          quality={74}
+          className="absolute inset-0 h-full w-full opacity-70"
+          overlayClassName="bg-gradient-to-r from-emerald-950/90 via-emerald-950/65 to-emerald-900/75"
+          fallbackLabel="Reemplazar por imagen panorámica del proyecto en /public o desde admin."
+        />
+
+        <div className="relative grid gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="space-y-5 text-white">
             <Badge className="bg-white/15 text-white hover:bg-white/15">Proyecto en Selva Central</Badge>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Desarrollamos espacios en los que quieres vivir
+            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+              Desarrollamos espacios para vivir, invertir y proyectarte
             </h2>
             <p className="max-w-2xl text-white/90">
-              Proyecto residencial con accesos estratégicos, cerca de comercios, instituciones
-              educativas, terminal terrestre e instituciones del estado como fiscalía y poder
+              Santa Beatriz se ubica en zona estratégica de Chanchamayo, con accesos y cercanía a
+              áreas comerciales, instituciones educativas, terminal terrestre, fiscalía y poder
               judicial.
             </p>
 
@@ -127,7 +156,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
               {paymentOptions.map((option) => (
                 <div
                   key={option}
-                  className="rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-sm"
+                  className="rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm text-white/95 backdrop-blur"
                 >
                   {option}
                 </div>
@@ -135,12 +164,17 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50">
                 <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                  WhatsApp
+                  Conversar por WhatsApp
                 </a>
               </Button>
-              <Button asChild size="lg" className="bg-white text-emerald-900 hover:bg-white/90">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white/45 bg-transparent text-white hover:bg-white/10"
+              >
                 <a href={telHref}>Llamar: {phone}</a>
               </Button>
             </div>
@@ -151,7 +185,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
               <LeadCaptureForm
                 source="hero-showcase"
                 title="Solicita asesoría personalizada"
-                description="Déjanos tus datos y te ayudamos a evaluar tu mejor opción de compra."
+                description="Déjanos tus datos y te orientamos en el proceso de compra."
                 whatsappHref={whatsappHref}
                 submitLabel="Quiero que me contacten"
               />
@@ -160,33 +194,54 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
         </div>
       </section>
 
-      <section className="grid gap-6 rounded-3xl border bg-card p-5 shadow-sm md:grid-cols-[1.05fr_0.95fr] md:p-7">
+      <section className="relative z-10 grid gap-6 rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] md:grid-cols-[1.02fr_0.98fr] md:p-7">
         <div className="space-y-4">
-          <Badge variant="outline">Asesoría comercial</Badge>
-          <h2 className="text-3xl font-semibold tracking-tight">¿Ya tienes proyecto o consulta?</h2>
-          <p className="text-muted-foreground">
-            Nuestro equipo comercial revisa tu caso y te orienta sobre la alternativa de compra
-            más conveniente para Santa Beatriz.
+          <Badge variant="outline" className="border-emerald-200 text-emerald-900">
+            ¿Ya tienes proyecto o consulta?
+          </Badge>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">
+            Resolvemos tu caso comercial con atención directa
+          </h2>
+          <p className="text-zinc-600">
+            Nuestro equipo te orienta según tu objetivo: compra para vivienda, inversión o
+            evaluación de financiamiento.
           </p>
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <p>Atención directa: {phone}</p>
-            <p>Correo: {email}</p>
-            <p>Oficina: {address}</p>
+
+          <div className="grid gap-3 text-sm text-zinc-600 sm:grid-cols-2">
+            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+              <PhoneCall className="h-4 w-4 text-emerald-700" />
+              {phone}
+            </p>
+            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+              <Mail className="h-4 w-4 text-emerald-700" />
+              {email}
+            </p>
+            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2 sm:col-span-2">
+              <MapPin className="h-4 w-4 text-emerald-700" />
+              {address}
+            </p>
           </div>
-          <div className="flex min-h-52 items-center justify-center rounded-2xl border border-dashed bg-muted/40 text-center text-sm text-muted-foreground">
-            Colocar foto real de asesor en <code>/public</code>
+
+          <div className="relative min-h-56 overflow-hidden rounded-2xl border border-emerald-100">
+            <OptimizedMedia
+              src={referenceImageUrl}
+              alt="Asesor comercial Power Amazónica"
+              sizes="(max-width: 1024px) 100vw, 48vw"
+              className="absolute inset-0 h-full w-full"
+              fallbackLabel="Colocar foto real del asesor en /public"
+            />
           </div>
         </div>
 
-        <Card className="rounded-2xl border-dashed">
+        <Card className="rounded-2xl border-emerald-100">
           <CardHeader>
-            <CardTitle>Cuéntanos tu objetivo</CardTitle>
+            <CardTitle className="text-zinc-950">Te llamamos para orientarte</CardTitle>
           </CardHeader>
           <CardContent>
             <LeadCaptureForm
               source="proyecto-consulta"
-              title="Te llamamos para orientarte"
-              description="Comparte tu consulta y agendamos contacto por llamada o WhatsApp."
+              title="Déjanos tu consulta"
+              description="Comparte tu caso y agendamos contacto por llamada o WhatsApp."
               whatsappHref={whatsappHref}
               compact
               submitLabel="Solicitar llamada"
@@ -195,72 +250,103 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
         </Card>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
-        <Card className="rounded-3xl border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-3xl tracking-tight">Instagram / Comunidad</CardTitle>
+      <section className="relative z-10 grid gap-6 lg:grid-cols-2">
+        <Card className="rounded-[2rem] border-emerald-100 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)]">
+          <CardHeader className="space-y-3">
+            <CardTitle className="text-3xl tracking-tight text-zinc-950">Instagram / Comunidad</CardTitle>
+            <p className="text-zinc-600">
+              Compartimos novedades comerciales, avances y visitas de campo con nuestra comunidad.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-muted-foreground">
-              Mantenemos comunicación activa sobre avances, visitas y novedades del proyecto.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="flex min-h-44 items-center justify-center rounded-2xl border border-dashed bg-muted/40 text-xs text-muted-foreground">
-                Preview feed 1
-              </div>
-              <div className="flex min-h-44 items-center justify-center rounded-2xl border border-dashed bg-muted/40 text-xs text-muted-foreground">
-                Preview feed 2
-              </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {instagramMockCards.map((item) => (
+                <div
+                  key={item}
+                  className="rounded-xl border border-emerald-100 bg-emerald-50/50 px-3 py-4 text-center text-xs font-medium text-emerald-900"
+                >
+                  {item}
+                </div>
+              ))}
             </div>
-            <Button asChild variant="outline">
-              <a href="#" aria-label="Abrir Instagram de Power Amazónica">
-                Ver Instagram (placeholder)
+            <div className="relative min-h-52 overflow-hidden rounded-2xl border border-emerald-100">
+              <OptimizedMedia
+                src={referenceImageUrl}
+                alt="Comunidad Power Amazónica"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="absolute inset-0 h-full w-full"
+                fallbackLabel="Colocar preview real de Instagram en /public"
+              />
+            </div>
+            <Button asChild variant="outline" className="border-emerald-200 text-emerald-900 hover:bg-emerald-50">
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                Solicitar redes por WhatsApp
               </a>
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="rounded-3xl border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-3xl tracking-tight">Blog / Artículos</CardTitle>
+        <Card className="rounded-[2rem] border-emerald-100 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)]">
+          <CardHeader className="space-y-3">
+            <CardTitle className="text-3xl tracking-tight text-zinc-950">Blog / Artículos</CardTitle>
+            <p className="text-zinc-600">Contenido útil para tomar decisiones de compra con más claridad.</p>
           </CardHeader>
           <CardContent className="space-y-3">
             {blogPlaceholders.map((article) => (
-              <div key={article.title} className="rounded-2xl border p-4">
-                <p className="text-lg font-medium">{article.title}</p>
-                <p className="text-sm text-muted-foreground">{article.description}</p>
+              <div key={article.title} className="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
+                <p className="text-lg font-semibold text-zinc-950">{article.title}</p>
+                <p className="text-sm text-zinc-600">{article.description}</p>
               </div>
             ))}
-            <Button asChild variant="outline">
-              <a href="#" aria-label="Abrir blog de Power Amazónica">
-                Ir al blog (placeholder)
+            <Button asChild variant="outline" className="border-emerald-200 text-emerald-900 hover:bg-emerald-50">
+              <a href={mailtoHref}>
+                Recibir novedades por correo
+                <ArrowUpRight className="ml-2 h-4 w-4" />
               </a>
             </Button>
           </CardContent>
         </Card>
       </section>
 
-      <section className="space-y-6 rounded-3xl border bg-muted/20 p-6 shadow-sm sm:p-8">
+      <section className="relative z-10 space-y-6 rounded-[2rem] border border-emerald-100 bg-white p-6 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] sm:p-8">
         <div className="space-y-3 text-center">
-          <Badge variant="secondary">Compra con respaldo</Badge>
-          <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
-            Con Power Amazónica, priorizas seguridad documental y un proyecto con alta proyección
+          <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">
+            Respaldo comercial y documental
+          </Badge>
+          <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-tight text-zinc-950 sm:text-4xl">
+            Power Amazónica combina formalidad, experiencia regional y enfoque de servicio
           </h2>
-          <p className="mx-auto max-w-3xl text-muted-foreground">
-            Corporación Power Amazónica S.A.C. opera desde 2018 en selva central y acompaña procesos
-            formales de compra y evaluación de financiamiento.
+          <p className="mx-auto max-w-3xl text-zinc-600">
+            Corporación Power Amazónica S.A.C. opera desde 2018 en la selva central con proyectos
+            vinculados al Fondo MiVivienda en Chanchamayo, Satipo y Oxapampa.
           </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {trustStats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.label}
+                className="space-y-2 rounded-2xl border border-emerald-100 bg-emerald-50/45 px-4 py-4 text-center"
+              >
+                <Icon className="mx-auto h-5 w-5 text-emerald-700" />
+                <p className="text-xl font-semibold text-zinc-950">{stat.value}</p>
+                <p className="text-xs text-zinc-600">{stat.label}</p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {trustTips.map((tip) => (
-            <div key={tip} className="rounded-xl border bg-card px-4 py-3 text-sm text-muted-foreground">
+            <div key={tip} className="rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm text-zinc-600">
               {tip}
             </div>
           ))}
         </div>
 
-        <Accordion type="single" collapsible className="rounded-2xl border bg-card px-4">
+        <Accordion type="single" collapsible className="rounded-2xl border border-emerald-100 bg-emerald-50/35 px-4">
           {data.faq.map((item, index) => (
             <AccordionItem key={`${item.question}-${index}`} value={`faq-${index}`}>
               <AccordionTrigger>{item.question}</AccordionTrigger>
@@ -272,58 +358,65 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
 
       <Separator />
 
-      <footer className="grid gap-8 pb-8 md:grid-cols-4">
+      <footer className="relative z-10 grid gap-8 pb-10 md:grid-cols-4">
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold">Power Amazónica</h3>
-          <p className="text-sm text-muted-foreground">
-            Corporación Power Amazónica S.A.C. fundada en 2018. Operaciones vinculadas al Fondo
-            MiVivienda en Chanchamayo, Satipo y Oxapampa.
+          <h3 className="text-lg font-semibold text-zinc-950">Power Amazónica</h3>
+          <p className="text-sm text-zinc-600">
+            Corporación Power Amazónica S.A.C. fundada en 2018. Operaciones en Chanchamayo,
+            Satipo y Oxapampa.
           </p>
-          <p className="text-sm text-muted-foreground">8 viviendas construidas y entregadas.</p>
+          <p className="text-sm text-zinc-600">8 viviendas construidas y entregadas.</p>
         </div>
 
         <div className="space-y-2 text-sm">
-          <p className="font-medium">Navegación</p>
-          <a className="block text-muted-foreground hover:underline" href="#">
-            Inicio
+          <p className="font-medium text-zinc-950">Navegación</p>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={whatsappHref}>
+            Proyecto
           </a>
-          <a className="block text-muted-foreground hover:underline" href="#">
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={telHref}>
             Beneficios
           </a>
-          <a className="block text-muted-foreground hover:underline" href="#">
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={mailtoHref}>
             Contacto
           </a>
         </div>
 
         <div className="space-y-2 text-sm">
-          <p className="font-medium">Contacto</p>
-          <a className="block text-muted-foreground hover:underline" href={telHref}>
+          <p className="font-medium text-zinc-950">Contacto</p>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={telHref}>
             {phone}
           </a>
-          <a className="block text-muted-foreground hover:underline" href={mailtoHref}>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={mailtoHref}>
             {email}
           </a>
-          <p className="text-muted-foreground">{address}</p>
+          <p className="text-zinc-600">{address}</p>
         </div>
 
         <div className="space-y-2 text-sm">
-          <p className="font-medium">Redes (placeholder)</p>
-          <a className="block text-muted-foreground hover:underline" href="#">
-            Instagram
-          </a>
-          <a className="block text-muted-foreground hover:underline" href="#">
-            Facebook
-          </a>
+          <p className="font-medium text-zinc-950">Gestiones</p>
           <a
-            className="block text-muted-foreground hover:underline"
+            className="block text-zinc-600 hover:text-emerald-800 hover:underline"
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
           >
             WhatsApp
           </a>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={telHref}>
+            Llamada directa
+          </a>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={mailtoHref}>
+            Correo
+          </a>
         </div>
       </footer>
+
+      <section className="relative z-10 rounded-2xl border border-emerald-100 bg-emerald-50/45 p-4 text-xs text-zinc-600">
+        <p className="flex items-center gap-2">
+          <Landmark className="h-4 w-4 text-emerald-700" />
+          Proyecto Urb. Santa Beatriz con enfoque de formalidad y atención comercial directa.
+        </p>
+      </section>
     </main>
   );
 }

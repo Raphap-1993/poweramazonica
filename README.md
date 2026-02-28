@@ -57,7 +57,12 @@ Recommended env vars:
 
 - `UPLOAD_STORAGE_DIR` (production persistent path, e.g. shared volume)
 - `UPLOAD_MAX_FILE_MB` (default `8`)
-- `UPLOAD_IMAGE_QUALITY` (default `82`)
+- `UPLOAD_IMAGE_QUALITY` (default `76`)
+
+Performance note:
+
+- New uploads are resized/compressed more aggressively (hero up to `1600x900`, generic up to `1280x1280`).
+- Existing images already uploaded keep their original optimized size; re-upload them from admin if you need lower weight.
 
 ## Leads API
 

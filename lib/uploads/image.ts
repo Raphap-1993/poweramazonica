@@ -71,7 +71,8 @@ export async function storeOptimizedImage(args: StoreOptimizedImageArgs): Promis
     })
     .webp({
       quality: options.quality,
-      effort: 5,
+      effort: 4,
+      smartSubsample: true,
     })
     .toBuffer({ resolveWithObject: true });
 
