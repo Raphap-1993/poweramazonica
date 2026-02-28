@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 import { isRenderableImageSrc, normalizeImageSrc } from "@/lib/media/normalize-image-src";
 import { cn } from "@/lib/utils";
@@ -26,8 +29,9 @@ export function OptimizedMedia({
   fallbackLabel = "Reemplazar por imagen real en /public o desde admin.",
   overlayClassName,
 }: OptimizedMediaProps) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const normalizedSrc = normalizeImageSrc(src);
-  const hasImageSource = isRenderableImageSrc(normalizedSrc);
+  const hasImageSource = isRenderableImageSrc(normalizedSrc) && failedSrc !== normalizedSrc;
 
   return (
     <div className={cn("relative overflow-hidden rounded-2xl", className)}>
@@ -41,6 +45,7 @@ export function OptimizedMedia({
           sizes={sizes}
           className="object-cover"
           style={{ objectPosition }}
+          onError={() => setFailedSrc(normalizedSrc)}
         />
       ) : null}
 
