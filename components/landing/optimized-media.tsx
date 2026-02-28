@@ -26,7 +26,7 @@ export function OptimizedMedia({
   priority = false,
   quality = 76,
   objectPosition = "center",
-  fallbackLabel = "Reemplazar por imagen real en /public o desde admin.",
+  fallbackLabel = "Imagen referencial del proyecto.",
   overlayClassName,
 }: OptimizedMediaProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);

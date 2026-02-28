@@ -62,6 +62,12 @@ const trustStats = [
   { label: "Proyecto actual", value: "Santa Beatriz", icon: Trees },
 ];
 
+const advisoryHighlights = [
+  "Evaluamos tu objetivo de compra o inversión.",
+  "Revisamos ubicación, documentos y facilidades de pago.",
+  "Atención comercial directa por llamada o WhatsApp.",
+];
+
 function toTelHref(phone: string): string {
   const normalized = phone.trim().replace(/\s+/g, "");
   if (!normalized) {
@@ -224,7 +230,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             objectPosition="center 42%"
             className="absolute inset-0 h-full w-full opacity-70"
             overlayClassName="bg-gradient-to-r from-emerald-950/90 via-emerald-950/65 to-emerald-900/75"
-            fallbackLabel="Reemplazar por imagen panorámica del proyecto en /public o desde admin."
+            fallbackLabel="Imagen referencial del Proyecto Santa Beatriz."
           />
 
           <div className="relative grid gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
@@ -316,32 +322,29 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
                 alt="Asesor comercial Power Amazónica"
                 sizes="(max-width: 1024px) 100vw, 48vw"
                 className="absolute inset-0 h-full w-full"
-                fallbackLabel="Colocar foto real del asesor en /public"
+                fallbackLabel="Asesor comercial de Power Amazónica."
               />
             </div>
           </div>
 
           <Card className="rounded-2xl border-emerald-100">
             <CardHeader>
-              <CardTitle className="text-zinc-950">Un solo formulario, mayor conversión</CardTitle>
+              <CardTitle className="text-zinc-950">Agenda tu asesoría comercial hoy</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-zinc-600">
-                Para evitar duplicidad y mejorar el flujo E2E, usamos un formulario principal de
-                captura en la sección superior.
-              </p>
+              <p className="text-sm text-zinc-600">Te ayudamos a tomar una decisión informada, sin compromiso.</p>
               <div className="space-y-2 text-sm text-zinc-600">
-                <p>1. Completa tus datos en el formulario principal.</p>
-                <p>2. Recibimos tu lead en base de datos.</p>
-                <p>3. El equipo comercial te contacta por llamada o WhatsApp.</p>
+                {advisoryHighlights.map((item) => (
+                  <p key={item}>• {item}</p>
+                ))}
               </div>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
-                  <a href="#lead-form">Ir al formulario principal</a>
+                  <a href="#lead-form">Quiero asesoría ahora</a>
                 </Button>
                 <Button asChild variant="outline">
                   <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                    WhatsApp directo
+                    Hablar por WhatsApp
                   </a>
                 </Button>
               </div>
@@ -374,7 +377,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
                 alt="Comunidad Power Amazónica"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="absolute inset-0 h-full w-full"
-                fallbackLabel="Colocar preview real de Instagram en /public"
+                fallbackLabel="Comunidad y novedades del proyecto."
               />
             </div>
             <Button asChild variant="outline" className="border-emerald-200 text-emerald-900 hover:bg-emerald-50">
@@ -469,13 +472,16 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
 
         <div className="space-y-2 text-sm">
           <p className="font-medium text-zinc-950">Navegación</p>
-          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={whatsappHref}>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href="#proyecto">
             Proyecto
           </a>
-          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={telHref}>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href="#beneficios">
             Beneficios
           </a>
-          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href={mailtoHref}>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href="#faq">
+            Preguntas frecuentes
+          </a>
+          <a className="block text-zinc-600 hover:text-emerald-800 hover:underline" href="#contacto">
             Contacto
           </a>
         </div>

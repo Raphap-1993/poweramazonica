@@ -101,7 +101,7 @@ export function BenefitsCarousel({ items, referenceImageUrl }: BenefitsCarouselP
                   alt={item.title}
                   sizes="(max-width: 1024px) 88vw, 32vw"
                   className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
-                  fallbackLabel="Colocar imagen real de beneficio en /public"
+                  fallbackLabel="Beneficio del proyecto Santa Beatriz."
                 />
               </div>
             </CardContent>

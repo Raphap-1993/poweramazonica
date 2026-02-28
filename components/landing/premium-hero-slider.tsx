@@ -105,7 +105,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
           objectPosition={activeImagePosition}
           className="absolute inset-0 h-full w-full"
           overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-900/58 to-black/38"
-          fallbackLabel="Colocar imagen panorámica real del proyecto en /public o subir desde admin."
+          fallbackLabel="Vista referencial panorámica del Proyecto Santa Beatriz."
         />
 
         <div
