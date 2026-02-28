@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { HeroSlide } from "@/lib/content/types";
 import { LANDING_LINKS } from "@/lib/landing/constants";
+import { cn } from "@/lib/utils";
 
 type PremiumHeroSliderProps = {
   slides: HeroSlide[];
@@ -55,7 +56,6 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
 
   const activeSlide = normalizedSlides[activeIndex];
   const heroMinHeight = "min-h-[clamp(460px,78svh,760px)]";
-  const activeImagePosition = activeSlide.imagePosition?.trim() || "center center";
 
   useEffect(() => {
     const imageUrls = Array.from(
@@ -102,22 +102,33 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   return (
     <section className="relative w-full overflow-visible">
       <div className={`relative ${heroMinHeight} overflow-hidden`}>
-        <OptimizedMedia
-          src={activeSlide.imageUrl}
-          alt={activeSlide.title}
-          priority={activeIndex === 0}
-          sizes="100vw"
-          quality={74}
-          objectPosition={activeImagePosition}
-          className="absolute inset-0 h-full w-full"
-          overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-900/58 to-black/38"
-          fallbackLabel="Vista referencial panorámica del Proyecto Santa Beatriz."
-        />
+        {normalizedSlides.map((slide, index) => (
+          <div
+            key={`hero-image-${index}`}
+            className={cn(
+              "absolute inset-0 transition-opacity duration-700 ease-out",
+              index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0",
+            )}
+            aria-hidden={index !== activeIndex}
+          >
+            <OptimizedMedia
+              src={slide.imageUrl}
+              alt={slide.title}
+              priority={index === 0}
+              sizes="100vw"
+              quality={74}
+              objectPosition={slide.imagePosition?.trim() || "center center"}
+              className="absolute inset-0 h-full w-full"
+              overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-900/58 to-black/38"
+              fallbackLabel="Vista referencial panorámica del Proyecto Santa Beatriz."
+            />
+          </div>
+        ))}
 
         <div
           className={`relative z-10 mx-auto flex ${heroMinHeight} max-w-7xl items-center px-4 pb-24 pt-16 sm:px-6 sm:pb-28 lg:px-10 lg:pt-20`}
         >
-          <div className="max-w-2xl space-y-5 text-white">
+          <div key={`hero-content-${activeIndex}`} className="hero-content-enter max-w-2xl space-y-5 text-white">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-white/20 text-white hover:bg-white/20">Proyecto Urb. Santa Beatriz</Badge>
               <Badge className="border-white/45 bg-white/10 text-white hover:bg-white/10">Lotes de 150 m²</Badge>

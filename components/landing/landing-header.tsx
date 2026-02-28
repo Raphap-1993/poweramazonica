@@ -45,7 +45,8 @@ export function LandingHeader({ header }: LandingHeaderProps) {
       return;
     }
 
-    const headerOffset = 92;
+    const headerElement = document.querySelector("header");
+    const headerOffset = headerElement ? headerElement.getBoundingClientRect().height + 14 : 92;
     const targetY = window.scrollY + target.getBoundingClientRect().top - headerOffset;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -62,7 +63,16 @@ export function LandingHeader({ header }: LandingHeaderProps) {
     }
 
     event.preventDefault();
+    const menuWasOpen = isOpen;
     handleMenuClick(href);
+
+    if (menuWasOpen) {
+      window.setTimeout(() => {
+        scrollToSection(href);
+      }, 120);
+      return;
+    }
+
     scrollToSection(href);
   }
 
