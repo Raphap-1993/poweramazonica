@@ -16,17 +16,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const landingSeoFallback = {
+  title: "Power Amazónica | Proyecto Santa Beatriz – Lotes de 150 m² en Chanchamayo",
+  description:
+    "Conoce el Proyecto Urb. Santa Beatriz de Power Amazónica: lotes de 150 m² con papeles en regla, contrato notarial y facilidades de pago. Solicita información por WhatsApp o llamada.",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const headerStore = await headers();
   const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host");
   const seo = await getPublishedSeoForDomain(host);
+  const title = seo.title || landingSeoFallback.title;
+  const description = seo.description || landingSeoFallback.description;
+  const ogTitle = seo.ogTitle || title;
+  const ogDescription = seo.ogDescription || description;
 
   return {
-    title: seo.title,
-    description: seo.description,
+    title,
+    description,
     openGraph: {
-      title: seo.ogTitle,
-      description: seo.ogDescription,
+      title: ogTitle,
+      description: ogDescription,
       type: "website",
       locale: "es_PE",
     },

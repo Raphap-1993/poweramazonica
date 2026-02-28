@@ -12,6 +12,7 @@ import { BenefitsCarousel } from "@/components/landing/benefits-carousel";
 import { LeadCaptureForm } from "@/components/landing/lead-capture-form";
 import { PremiumHeroSlider } from "@/components/landing/premium-hero-slider";
 import type { HeroSlide, LandingData } from "@/lib/content/types";
+import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
 
 type LandingPageContentProps = {
   data: LandingData;
@@ -47,7 +48,7 @@ const blogPlaceholders = [
 function toTelHref(phone: string): string {
   const normalized = phone.trim().replace(/\s+/g, "");
   if (!normalized) {
-    return "tel:+51990814630";
+    return LANDING_LINKS.telHref;
   }
 
   return normalized.startsWith("+") ? `tel:${normalized}` : `tel:+${normalized}`;
@@ -91,8 +92,12 @@ function normalizeHeroSlides(dataSlides: HeroSlide[], whatsappHref: string): Her
 }
 
 export function LandingPageContent({ data }: LandingPageContentProps) {
-  const whatsappHref = data.contact.whatsapp;
-  const telHref = toTelHref(data.contact.phone);
+  const whatsappHref = data.contact.whatsapp || LANDING_LINKS.whatsappHref;
+  const phone = data.contact.phone || LANDING_CONTACT.phone;
+  const email = data.contact.email || LANDING_CONTACT.email;
+  const address = data.contact.address || LANDING_CONTACT.address;
+  const telHref = toTelHref(phone);
+  const mailtoHref = email ? `mailto:${email}` : LANDING_LINKS.mailtoHref;
   const heroSlides = normalizeHeroSlides(data.heroSlider, whatsappHref);
 
   return (
@@ -136,7 +141,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
                 </a>
               </Button>
               <Button asChild size="lg" className="bg-white text-emerald-900 hover:bg-white/90">
-                <a href={telHref}>Llamar: {data.contact.phone}</a>
+                <a href={telHref}>Llamar: {phone}</a>
               </Button>
             </div>
           </div>
@@ -164,9 +169,9 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             más conveniente para Santa Beatriz.
           </p>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p>Atención directa: 990 814 630</p>
-            <p>Correo: {data.contact.email}</p>
-            <p>Oficina: {data.contact.address}</p>
+            <p>Atención directa: {phone}</p>
+            <p>Correo: {email}</p>
+            <p>Oficina: {address}</p>
           </div>
           <div className="flex min-h-52 items-center justify-center rounded-2xl border border-dashed bg-muted/40 text-center text-sm text-muted-foreground">
             Colocar foto real de asesor en <code>/public</code>
@@ -293,15 +298,12 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
         <div className="space-y-2 text-sm">
           <p className="font-medium">Contacto</p>
           <a className="block text-muted-foreground hover:underline" href={telHref}>
-            {data.contact.phone}
+            {phone}
           </a>
-          <a
-            className="block text-muted-foreground hover:underline"
-            href={`mailto:${data.contact.email}`}
-          >
-            {data.contact.email}
+          <a className="block text-muted-foreground hover:underline" href={mailtoHref}>
+            {email}
           </a>
-          <p className="text-muted-foreground">{data.contact.address}</p>
+          <p className="text-muted-foreground">{address}</p>
         </div>
 
         <div className="space-y-2 text-sm">

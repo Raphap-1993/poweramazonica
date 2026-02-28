@@ -58,3 +58,16 @@ Recommended env vars:
 - `UPLOAD_STORAGE_DIR` (production persistent path, e.g. shared volume)
 - `UPLOAD_MAX_FILE_MB` (default `8`)
 - `UPLOAD_IMAGE_QUALITY` (default `82`)
+
+## Leads API
+
+- Public endpoint: `POST /api/leads`
+- Validates payload with Zod (`name`, `phone`, `email?`, `message`, `source?`)
+- Stores lead in PostgreSQL (`Lead` model in Prisma)
+
+Required env vars in production:
+
+- `DATABASE_URL`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD_HASH`
+- `AUTH_SECRET`

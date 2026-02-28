@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { HeroSlide } from "@/lib/content/types";
+import { LANDING_LINKS } from "@/lib/landing/constants";
 
 type PremiumHeroSliderProps = {
   slides: HeroSlide[];
@@ -20,8 +21,7 @@ function normalizeSlides(slides: HeroSlide[]): HeroSlide[] {
           title: "Proyecto Urb. Santa Beatriz",
           subtitle: "Lotes de 150 m² a 15 minutos del centro de Chanchamayo.",
           ctaText: "WhatsApp",
-          ctaHref:
-            "https://wa.me/51990814630?text=Hola%2C%20quiero%20informacion%20del%20Proyecto%20Urb.%20Santa%20Beatriz.",
+          ctaHref: LANDING_LINKS.whatsappHref,
           imageUrl: "",
         },
       ];

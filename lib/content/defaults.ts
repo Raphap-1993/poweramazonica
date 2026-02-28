@@ -1,4 +1,5 @@
 import type { LandingData, LandingSeo } from "@/lib/content/types";
+import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
 
 export const defaultLandingData: LandingData = {
   heroSlider: [
@@ -6,8 +7,7 @@ export const defaultLandingData: LandingData = {
       title: "Proyecto Urb. Santa Beatriz",
       subtitle: "Lotes de 150 m2 a 15 min del centro de Chanchamayo",
       ctaText: "WhatsApp",
-      ctaHref:
-        "https://wa.me/51990814630?text=Hola%2C%20quiero%20informacion%20del%20Proyecto%20Urb.%20Santa%20Beatriz.",
+      ctaHref: LANDING_LINKS.whatsappHref,
       imageUrl: "",
     },
   ],
@@ -28,21 +28,20 @@ export const defaultLandingData: LandingData = {
     },
   ],
   contact: {
-    phone: "+51990814630",
-    whatsapp:
-      "https://wa.me/51990814630?text=Hola%2C%20quiero%20informacion%20del%20Proyecto%20Urb.%20Santa%20Beatriz.",
-    email: "orbezog@hotmail.com",
-    address: "Jr. Ayacucho 599",
+    phone: LANDING_CONTACT.phoneIntl,
+    whatsapp: LANDING_LINKS.whatsappHref,
+    email: LANDING_CONTACT.email,
+    address: LANDING_CONTACT.address,
   },
 };
 
 export const defaultLandingSeo: LandingSeo = {
-  title: "Power Amazonica | Proyecto Santa Beatriz",
+  title: "Power Amazónica | Proyecto Santa Beatriz – Lotes de 150 m² en Chanchamayo",
   description:
-    "Conoce el Proyecto Urb. Santa Beatriz de Power Amazonica: lotes de 150 m2 en Chanchamayo.",
-  ogTitle: "Power Amazonica | Proyecto Santa Beatriz",
+    "Conoce el Proyecto Urb. Santa Beatriz de Power Amazónica: lotes de 150 m² con papeles en regla, contrato notarial y facilidades de pago.",
+  ogTitle: "Power Amazónica | Proyecto Santa Beatriz – Lotes de 150 m² en Chanchamayo",
   ogDescription:
-    "Lotes de 150 m2 en Chanchamayo, con papeles en regla y facilidades de pago.",
+    "Proyecto Urb. Santa Beatriz en Chanchamayo con lotes de 150 m², ubicación estratégica y facilidades de pago.",
 };
 
 export const landingFallbackContent = {
@@ -50,6 +49,5 @@ export const landingFallbackContent = {
   description:
     "Estamos preparando la informacion oficial del proyecto. Contactanos para recibir detalle actualizado.",
   ctaText: "Contactar por WhatsApp",
-  ctaHref:
-    "https://wa.me/51990814630?text=Hola%2C%20quiero%20informacion%20actualizada%20del%20proyecto.",
+  ctaHref: LANDING_LINKS.whatsappHref,
 };
