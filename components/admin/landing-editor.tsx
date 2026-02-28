@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import {
@@ -48,6 +48,8 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [uploadingHeroIndex, setUploadingHeroIndex] = useState<number | null>(null);
+  const [heroUploadFiles, setHeroUploadFiles] = useState<Record<number, File | null>>({});
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,6 +139,55 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
     }
   }
 
+  async function uploadHeroImage(index: number) {
+    const file = heroUploadFiles[index];
+    if (!file) {
+      setError("Selecciona una imagen antes de subir.");
+      return;
+    }
+
+    setUploadingHeroIndex(index);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("kind", "hero");
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json().catch(() => null)) as
+        | { error?: string; file?: { url: string } }
+        | null;
+
+      if (!response.ok || !data?.file?.url) {
+        setError(data?.error ?? "No se pudo subir la imagen");
+        return;
+      }
+
+      setPayload((current) => ({
+        ...current,
+        data: {
+          ...current.data,
+          heroSlider: current.data.heroSlider.map((item, itemIndex) =>
+            itemIndex === index ? { ...item, imageUrl: data.file?.url } : item,
+          ),
+        },
+      }));
+      setHeroUploadFiles((current) => ({
+        ...current,
+        [index]: null,
+      }));
+      setMessage("Imagen optimizada y cargada correctamente.");
+    } finally {
+      setUploadingHeroIndex(null);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -151,13 +202,13 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button onClick={() => void saveDraft()} disabled={isSaving || isPublishing}>
+            <Button onClick={() => void saveDraft()} disabled={isSaving || isPublishing || uploadingHeroIndex !== null}>
               {isSaving ? "Guardando..." : "Guardar borrador"}
             </Button>
             <Button
               variant="secondary"
               onClick={() => void onPublish()}
-              disabled={isSaving || isPublishing}
+              disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
             >
               {isPublishing ? "Publicando..." : "Publicar"}
             </Button>
@@ -246,20 +297,47 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                         });
                       }}
                     />
-                    <Input
-                      placeholder="URL de imagen (opcional)"
-                      value={slide.imageUrl ?? ""}
-                      onChange={(event) => {
-                        const heroSlider = payload.data.heroSlider.map((item, itemIndex) =>
-                          itemIndex === index ? { ...item, imageUrl: event.target.value } : item,
-                        );
-                        updatePayload({
-                          ...payload,
-                          data: { ...payload.data, heroSlider },
-                        });
-                      }}
-                      className="sm:col-span-2"
-                    />
+                    <div className="space-y-2 sm:col-span-2">
+                      <Input
+                        placeholder="URL de imagen (opcional)"
+                        value={slide.imageUrl ?? ""}
+                        onChange={(event) => {
+                          const heroSlider = payload.data.heroSlider.map((item, itemIndex) =>
+                            itemIndex === index ? { ...item, imageUrl: event.target.value } : item,
+                          );
+                          updatePayload({
+                            ...payload,
+                            data: { ...payload.data, heroSlider },
+                          });
+                        }}
+                      />
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <Input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/avif"
+                          onChange={(event) => {
+                            const selected = event.target.files?.[0] ?? null;
+                            setHeroUploadFiles((current) => ({
+                              ...current,
+                              [index]: selected,
+                            }));
+                          }}
+                          className="sm:max-w-sm"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => void uploadHeroImage(index)}
+                          disabled={!heroUploadFiles[index] || uploadingHeroIndex !== null}
+                        >
+                          <Upload className="mr-2 h-4 w-4" />
+                          {uploadingHeroIndex === index ? "Subiendo..." : "Subir y optimizar"}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Formatos: JPG/PNG/WebP/AVIF. Máximo recomendado: 8MB.
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -582,10 +660,17 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
       <Separator />
 
       <div className="flex gap-3">
-        <Button onClick={() => void saveDraft()} disabled={isSaving || isPublishing}>
+        <Button
+          onClick={() => void saveDraft()}
+          disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
+        >
           {isSaving ? "Guardando..." : "Guardar borrador"}
         </Button>
-        <Button variant="secondary" onClick={() => void onPublish()} disabled={isSaving || isPublishing}>
+        <Button
+          variant="secondary"
+          onClick={() => void onPublish()}
+          disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
+        >
           {isPublishing ? "Publicando..." : "Publicar"}
         </Button>
       </div>

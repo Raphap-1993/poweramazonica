@@ -46,3 +46,15 @@ pnpm build
 
 - Do not commit `.env*` files.
 - Keep commits small and focused (one topic per commit).
+
+## Uploads (Admin)
+
+- Admin upload endpoint: `POST /api/admin/upload` (authenticated).
+- Files are optimized to WebP with `sharp` before storage.
+- Public delivery route: `/uploads/<tenant>/<yyyy>/<mm>/<file>.webp`.
+
+Recommended env vars:
+
+- `UPLOAD_STORAGE_DIR` (production persistent path, e.g. shared volume)
+- `UPLOAD_MAX_FILE_MB` (default `8`)
+- `UPLOAD_IMAGE_QUALITY` (default `82`)
