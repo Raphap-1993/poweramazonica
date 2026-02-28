@@ -3,7 +3,7 @@
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { HeaderConfig } from "@/lib/content/types";
@@ -27,6 +27,43 @@ export function LandingHeader({ header }: LandingHeaderProps) {
     if (isAnchor(href)) {
       setIsOpen(false);
     }
+  }
+
+  function scrollToSection(href: string) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const rawId = href.replace(/^#/, "").trim();
+    if (!rawId) {
+      return;
+    }
+
+    const target = document.getElementById(rawId);
+    if (!target) {
+      window.history.replaceState(null, "", href);
+      return;
+    }
+
+    const headerOffset = 92;
+    const targetY = window.scrollY + target.getBoundingClientRect().top - headerOffset;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    window.scrollTo({
+      top: Math.max(0, targetY),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+    window.history.replaceState(null, "", href);
+  }
+
+  function handleAnchorNavigation(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (!isAnchor(href)) {
+      return;
+    }
+
+    event.preventDefault();
+    handleMenuClick(href);
+    scrollToSection(href);
   }
 
   return (
@@ -57,6 +94,7 @@ export function LandingHeader({ header }: LandingHeaderProps) {
             <a
               key={`${item.label}-${index}`}
               href={item.href}
+              onClick={(event) => handleAnchorNavigation(event, item.href)}
               className="text-sm font-medium text-zinc-700 transition hover:text-emerald-800"
             >
               {item.label}
@@ -94,7 +132,7 @@ export function LandingHeader({ header }: LandingHeaderProps) {
               <a
                 key={`${item.label}-mobile-${index}`}
                 href={item.href}
-                onClick={() => handleMenuClick(item.href)}
+                onClick={(event) => handleAnchorNavigation(event, item.href)}
                 className="rounded-lg px-2 py-2 text-sm font-medium text-zinc-700 hover:bg-emerald-50 hover:text-emerald-900"
               >
                 {item.label}
