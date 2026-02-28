@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, MapPin, PhoneCall } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { OptimizedMedia } from "@/components/landing/optimized-media";
@@ -66,30 +66,40 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-gradient-to-br from-lime-50 via-white to-emerald-50 p-3 shadow-[0_22px_70px_-45px_rgba(21,128,61,0.65)] sm:p-4">
-      <div className="relative overflow-hidden rounded-[1.65rem] border border-emerald-100/80 bg-white/90 p-5 backdrop-blur sm:p-7">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(132,204,22,0.16),_transparent_58%)]" />
+    <section className="relative overflow-hidden rounded-[2rem] border border-emerald-200/80 shadow-[0_25px_80px_-52px_rgba(21,128,61,0.75)]">
+      <div className="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px]">
+        <OptimizedMedia
+          src={activeSlide.imageUrl}
+          alt={activeSlide.title}
+          priority={activeIndex === 0}
+          sizes="100vw"
+          quality={74}
+          className="absolute inset-0 h-full w-full"
+          overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-950/58 to-emerald-900/45"
+          fallbackLabel="Colocar imagen panorámica real del proyecto en /public o subir desde admin."
+        />
 
-        <div className="relative grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="space-y-6">
+        <div className="relative z-10 flex min-h-[520px] items-end p-4 sm:min-h-[580px] sm:p-6 lg:min-h-[640px] lg:p-9">
+          <div className="w-full rounded-3xl border border-white/35 bg-white/88 p-5 shadow-xl backdrop-blur-md sm:max-w-xl sm:p-7">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">
                 Proyecto Urb. Santa Beatriz
               </Badge>
-              <Badge
-                variant="outline"
-                className="border-emerald-200 bg-white text-emerald-900"
-              >
+              <Badge variant="outline" className="border-emerald-200 bg-white text-emerald-900">
                 Lotes de 150 m²
               </Badge>
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs text-emerald-900">
+                <MapPin className="h-3.5 w-3.5" />
+                Chanchamayo
+              </span>
             </div>
 
-            <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-zinc-950 sm:text-5xl">
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950 sm:text-5xl">
               {activeSlide.title}
             </h1>
-            <p className="max-w-xl text-lg text-zinc-600">{activeSlide.subtitle}</p>
+            <p className="mt-3 text-lg text-zinc-600">{activeSlide.subtitle}</p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-emerald-700 text-white hover:bg-emerald-800">
                 <a href={activeSlide.ctaHref} target="_blank" rel="noopener noreferrer">
                   {activeSlide.ctaText}
@@ -107,7 +117,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-3 text-sm text-zinc-600">
+            <div className="mt-4 flex flex-wrap gap-2 text-sm text-zinc-600">
               <span className="rounded-full border border-emerald-100 bg-white px-3 py-1.5">
                 Contrato notarial
               </span>
@@ -119,51 +129,9 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
               </span>
             </div>
           </div>
-
-          <div className="relative">
-            <div className="relative min-h-[300px] overflow-hidden rounded-2xl border border-emerald-200 p-4 sm:min-h-[360px] sm:p-6">
-              <OptimizedMedia
-                src={activeSlide.imageUrl}
-                alt={activeSlide.title}
-                priority={activeIndex === 0}
-                sizes="(max-width: 1024px) 100vw, 46vw"
-                quality={74}
-                className="absolute inset-0 h-full w-full"
-              />
-              <div className="relative z-10 w-full space-y-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/20 px-3 py-1 text-xs text-white backdrop-blur">
-                  <MapPin className="h-3.5 w-3.5" />
-                  Chanchamayo, selva central
-                </div>
-
-                <div className="rounded-xl border border-white/35 bg-white/20 p-3 text-white backdrop-blur-md">
-                  <p className="text-sm font-medium">
-                    Colocar imagen real del proyecto en <code>/public</code> o subir desde admin.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-emerald-900">
-                    15 min del centro
-                  </span>
-                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-emerald-900">
-                    Servicios proyectados
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -left-2 -top-2 hidden rounded-xl border border-emerald-200 bg-white/95 p-3 shadow-lg backdrop-blur sm:block">
-              <p className="text-xs font-medium text-zinc-700">Asesor comercial</p>
-              <p className="flex items-center gap-1 text-sm font-semibold text-emerald-800">
-                <PhoneCall className="h-3.5 w-3.5" />
-                990 814 630
-              </p>
-            </div>
-          </div>
         </div>
 
-        <div className="relative mt-7 flex items-center justify-between gap-3">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex items-center justify-between bg-gradient-to-t from-black/45 via-black/25 to-transparent p-4 sm:p-6">
           <div className="flex items-center gap-2">
             {normalizedSlides.map((slide, index) => (
               <button
@@ -172,9 +140,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
                 onClick={() => setActiveIndex(index)}
                 aria-label={`Ir al slide ${index + 1}`}
                 className={`h-2.5 rounded-full transition-all ${
-                  index === activeIndex
-                    ? "w-8 bg-emerald-700"
-                    : "w-2.5 bg-emerald-700/25 hover:bg-emerald-700/40"
+                  index === activeIndex ? "w-8 bg-white" : "w-2.5 bg-white/45 hover:bg-white/75"
                 }`}
               />
             ))}
@@ -185,7 +151,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
               type="button"
               size="icon"
               variant="outline"
-              className="h-9 w-9 border-emerald-200 bg-white text-emerald-900 hover:bg-emerald-50"
+              className="h-10 w-10 border-white/45 bg-white/15 text-white hover:bg-white/25"
               onClick={goToPrevious}
               aria-label="Slide anterior"
             >
@@ -195,7 +161,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
               type="button"
               size="icon"
               variant="outline"
-              className="h-9 w-9 border-emerald-200 bg-white text-emerald-900 hover:bg-emerald-50"
+              className="h-10 w-10 border-white/45 bg-white/15 text-white hover:bg-white/25"
               onClick={goToNext}
               aria-label="Siguiente slide"
             >
