@@ -2,6 +2,19 @@ import type { LandingData, LandingSeo } from "@/lib/content/types";
 import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
 
 export const defaultLandingData: LandingData = {
+  header: {
+    brandText: "Power Amazónica",
+    menu: [
+      { label: "Proyecto", href: "#proyecto" },
+      { label: "Beneficios", href: "#beneficios" },
+      { label: "FAQ", href: "#faq" },
+      { label: "Contacto", href: "#contacto" },
+    ],
+    primaryCtaText: "WhatsApp",
+    primaryCtaHref: LANDING_LINKS.whatsappHref,
+    secondaryCtaText: "Llamar",
+    secondaryCtaHref: LANDING_LINKS.telHref,
+  },
   heroSlider: [
     {
       title: "Proyecto Urb. Santa Beatriz",

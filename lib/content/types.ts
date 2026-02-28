@@ -6,6 +6,20 @@ export type HeroSlide = {
   imageUrl?: string;
 };
 
+export type HeaderMenuItem = {
+  label: string;
+  href: string;
+};
+
+export type HeaderConfig = {
+  brandText: string;
+  menu: HeaderMenuItem[];
+  primaryCtaText: string;
+  primaryCtaHref: string;
+  secondaryCtaText: string;
+  secondaryCtaHref: string;
+};
+
 export type FeatureItem = {
   title: string;
   description: string;
@@ -25,6 +39,7 @@ export type ContactData = {
 };
 
 export type LandingData = {
+  header: HeaderConfig;
   heroSlider: HeroSlide[];
   features: FeatureItem[];
   faq: FaqItem[];

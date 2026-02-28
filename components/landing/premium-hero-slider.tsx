@@ -52,6 +52,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const activeSlide = normalizedSlides[activeIndex];
+  const heroMinHeight = "min-h-[clamp(460px,78svh,760px)]";
 
   useEffect(() => {
     if (normalizedSlides.length <= 1) {
@@ -66,13 +67,20 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   }, [normalizedSlides.length]);
 
   useEffect(() => {
-    const imageUrls = normalizedSlides.map((slide) => slide.imageUrl?.trim()).filter(Boolean);
-    imageUrls.forEach((url) => {
-      const image = new window.Image();
-      image.decoding = "async";
-      image.src = url as string;
-    });
-  }, [normalizedSlides]);
+    if (normalizedSlides.length <= 1) {
+      return;
+    }
+
+    const nextIndex = (activeIndex + 1) % normalizedSlides.length;
+    const nextUrl = normalizedSlides[nextIndex]?.imageUrl?.trim();
+    if (!nextUrl) {
+      return;
+    }
+
+    const image = new window.Image();
+    image.decoding = "async";
+    image.src = nextUrl;
+  }, [activeIndex, normalizedSlides]);
 
   function goToPrevious() {
     setActiveIndex((current) =>
@@ -85,20 +93,23 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   }
 
   return (
-    <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-emerald-950">
-      <div className="relative min-h-[560px] sm:min-h-[640px] lg:min-h-[700px]">
+    <section className="relative w-full overflow-hidden bg-emerald-950">
+      <div className={`relative ${heroMinHeight}`}>
         <OptimizedMedia
           src={activeSlide.imageUrl}
           alt={activeSlide.title}
           priority={activeIndex === 0}
           sizes="100vw"
           quality={74}
+          objectPosition="center 44%"
           className="absolute inset-0 h-full w-full"
           overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-900/58 to-black/38"
           fallbackLabel="Colocar imagen panorámica real del proyecto en /public o subir desde admin."
         />
 
-        <div className="relative z-10 mx-auto flex min-h-[560px] max-w-7xl items-center px-4 pb-24 pt-16 sm:min-h-[640px] sm:px-6 sm:pb-28 lg:min-h-[700px] lg:px-10 lg:pt-20">
+        <div
+          className={`relative z-10 mx-auto flex ${heroMinHeight} max-w-7xl items-center px-4 pb-24 pt-16 sm:px-6 sm:pb-28 lg:px-10 lg:pt-20`}
+        >
           <div className="max-w-2xl space-y-5 text-white">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-white/20 text-white hover:bg-white/20">Proyecto Urb. Santa Beatriz</Badge>
@@ -178,7 +189,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
         </div>
       </div>
 
-      <div className="relative z-30 mx-auto -mt-6 w-full max-w-7xl px-4 pb-3 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
+      <div className="relative z-30 mx-auto -mt-5 w-full max-w-7xl px-4 pb-3 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
         <div className="grid gap-3 rounded-2xl border border-emerald-100 bg-white/96 p-3 shadow-xl backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
           {quickHighlights.map((item) => (
             <div key={item.title} className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-3">

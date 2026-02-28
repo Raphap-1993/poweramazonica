@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BenefitsCarousel } from "@/components/landing/benefits-carousel";
+import { LandingHeader } from "@/components/landing/landing-header";
 import { LeadCaptureForm } from "@/components/landing/lead-capture-form";
 import { OptimizedMedia } from "@/components/landing/optimized-media";
 import { PremiumHeroSlider } from "@/components/landing/premium-hero-slider";
@@ -117,84 +118,90 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
   const referenceImageUrl = heroSlides.find((slide) => slide.imageUrl?.trim())?.imageUrl ?? "";
 
   return (
-    <main className="relative mx-auto w-full max-w-6xl space-y-9 px-4 py-8 sm:px-6 lg:space-y-12 lg:px-8 lg:py-10">
-      <div className="pointer-events-none absolute inset-x-0 -top-40 z-0 h-80 bg-[radial-gradient(circle,_rgba(132,204,22,0.18)_0%,_transparent_70%)]" />
+    <main className="relative w-full">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-80 bg-[radial-gradient(circle,_rgba(132,204,22,0.18)_0%,_transparent_70%)]" />
 
-      <section className="relative z-10">
+      <section className="relative z-40">
+        <LandingHeader header={data.header} />
+      </section>
+
+      <section id="proyecto" className="relative z-10 scroll-mt-28">
         <PremiumHeroSlider slides={heroSlides} telHref={telHref} />
       </section>
 
-      <section className="relative z-10">
-        <BenefitsCarousel items={data.features} referenceImageUrl={referenceImageUrl} />
-      </section>
+      <div className="relative mx-auto w-full max-w-6xl space-y-9 px-4 py-8 sm:px-6 lg:space-y-12 lg:px-8 lg:py-10">
+        <section id="beneficios" className="relative z-10 scroll-mt-28">
+          <BenefitsCarousel items={data.features} referenceImageUrl={referenceImageUrl} />
+        </section>
 
-      <section className="relative z-10 overflow-hidden rounded-[2rem] border border-emerald-900/20 bg-emerald-950 px-5 py-6 shadow-[0_28px_80px_-55px_rgba(6,78,59,0.9)] sm:px-7 sm:py-8 lg:px-8">
-        <OptimizedMedia
-          src={referenceImageUrl}
-          alt="Vista referencial de Santa Beatriz"
-          priority
-          sizes="100vw"
-          quality={74}
-          className="absolute inset-0 h-full w-full opacity-70"
-          overlayClassName="bg-gradient-to-r from-emerald-950/90 via-emerald-950/65 to-emerald-900/75"
-          fallbackLabel="Reemplazar por imagen panorámica del proyecto en /public o desde admin."
-        />
+        <section className="relative z-10 overflow-hidden rounded-[2rem] border border-emerald-900/20 bg-emerald-950 px-5 py-6 shadow-[0_28px_80px_-55px_rgba(6,78,59,0.9)] sm:px-7 sm:py-8 lg:px-8">
+          <OptimizedMedia
+            src={referenceImageUrl}
+            alt="Vista referencial de Santa Beatriz"
+            priority
+            sizes="100vw"
+            quality={74}
+            objectPosition="center 42%"
+            className="absolute inset-0 h-full w-full opacity-70"
+            overlayClassName="bg-gradient-to-r from-emerald-950/90 via-emerald-950/65 to-emerald-900/75"
+            fallbackLabel="Reemplazar por imagen panorámica del proyecto en /public o desde admin."
+          />
 
-        <div className="relative grid gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div className="space-y-5 text-white">
-            <Badge className="bg-white/15 text-white hover:bg-white/15">Proyecto en Selva Central</Badge>
-            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-              Desarrollamos espacios para vivir, invertir y proyectarte
-            </h2>
-            <p className="max-w-2xl text-white/90">
-              Santa Beatriz se ubica en zona estratégica de Chanchamayo, con accesos y cercanía a
-              áreas comerciales, instituciones educativas, terminal terrestre, fiscalía y poder
-              judicial.
-            </p>
+          <div className="relative grid gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div className="space-y-5 text-white">
+              <Badge className="bg-white/15 text-white hover:bg-white/15">Proyecto en Selva Central</Badge>
+              <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+                Desarrollamos espacios para vivir, invertir y proyectarte
+              </h2>
+              <p className="max-w-2xl text-white/90">
+                Santa Beatriz se ubica en zona estratégica de Chanchamayo, con accesos y cercanía a
+                áreas comerciales, instituciones educativas, terminal terrestre, fiscalía y poder
+                judicial.
+              </p>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {paymentOptions.map((option) => (
-                <div
-                  key={option}
-                  className="rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm text-white/95 backdrop-blur"
+              <div className="grid gap-3 sm:grid-cols-2">
+                {paymentOptions.map((option) => (
+                  <div
+                    key={option}
+                    className="rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm text-white/95 backdrop-blur"
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50">
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    Conversar por WhatsApp
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-white/45 bg-transparent text-white hover:bg-white/10"
                 >
-                  {option}
-                </div>
-              ))}
+                  <a href={telHref}>Llamar: {phone}</a>
+                </Button>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50">
-                <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                  Conversar por WhatsApp
-                </a>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/45 bg-transparent text-white hover:bg-white/10"
-              >
-                <a href={telHref}>Llamar: {phone}</a>
-              </Button>
-            </div>
+            <Card className="border-white/20 bg-white/95 text-foreground shadow-xl">
+              <CardContent className="pt-6">
+                <LeadCaptureForm
+                  source="hero-showcase"
+                  title="Solicita asesoría personalizada"
+                  description="Déjanos tus datos y te orientamos en el proceso de compra."
+                  whatsappHref={whatsappHref}
+                  submitLabel="Quiero que me contacten"
+                />
+              </CardContent>
+            </Card>
           </div>
+        </section>
 
-          <Card className="border-white/20 bg-white/95 text-foreground shadow-xl">
-            <CardContent className="pt-6">
-              <LeadCaptureForm
-                source="hero-showcase"
-                title="Solicita asesoría personalizada"
-                description="Déjanos tus datos y te orientamos en el proceso de compra."
-                whatsappHref={whatsappHref}
-                submitLabel="Quiero que me contacten"
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className="relative z-10 grid gap-6 rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] md:grid-cols-[1.02fr_0.98fr] md:p-7">
+        <section className="relative z-10 grid gap-6 rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] md:grid-cols-[1.02fr_0.98fr] md:p-7">
         <div className="space-y-4">
           <Badge variant="outline" className="border-emerald-200 text-emerald-900">
             ¿Ya tienes proyecto o consulta?
@@ -248,9 +255,9 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             />
           </CardContent>
         </Card>
-      </section>
+        </section>
 
-      <section className="relative z-10 grid gap-6 lg:grid-cols-2">
+        <section className="relative z-10 grid gap-6 lg:grid-cols-2">
         <Card className="rounded-[2rem] border-emerald-100 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)]">
           <CardHeader className="space-y-3">
             <CardTitle className="text-3xl tracking-tight text-zinc-950">Instagram / Comunidad</CardTitle>
@@ -306,9 +313,9 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             </Button>
           </CardContent>
         </Card>
-      </section>
+        </section>
 
-      <section className="relative z-10 space-y-6 rounded-[2rem] border border-emerald-100 bg-white p-6 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] sm:p-8">
+        <section id="faq" className="relative z-10 scroll-mt-28 space-y-6 rounded-[2rem] border border-emerald-100 bg-white p-6 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] sm:p-8">
         <div className="space-y-3 text-center">
           <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">
             Respaldo comercial y documental
@@ -354,11 +361,11 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             </AccordionItem>
           ))}
         </Accordion>
-      </section>
+        </section>
 
-      <Separator />
+        <Separator />
 
-      <footer className="relative z-10 grid gap-8 pb-10 md:grid-cols-4">
+        <footer id="contacto" className="relative z-10 scroll-mt-28 grid gap-8 pb-10 md:grid-cols-4">
         <div className="space-y-3">
           <h3 className="text-lg font-semibold text-zinc-950">Power Amazónica</h3>
           <p className="text-sm text-zinc-600">
@@ -409,14 +416,15 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             Correo
           </a>
         </div>
-      </footer>
+        </footer>
 
-      <section className="relative z-10 rounded-2xl border border-emerald-100 bg-emerald-50/45 p-4 text-xs text-zinc-600">
-        <p className="flex items-center gap-2">
-          <Landmark className="h-4 w-4 text-emerald-700" />
-          Proyecto Urb. Santa Beatriz con enfoque de formalidad y atención comercial directa.
-        </p>
-      </section>
+        <section className="relative z-10 rounded-2xl border border-emerald-100 bg-emerald-50/45 p-4 text-xs text-zinc-600">
+          <p className="flex items-center gap-2">
+            <Landmark className="h-4 w-4 text-emerald-700" />
+            Proyecto Urb. Santa Beatriz con enfoque de formalidad y atención comercial directa.
+          </p>
+        </section>
+      </div>
     </main>
   );
 }

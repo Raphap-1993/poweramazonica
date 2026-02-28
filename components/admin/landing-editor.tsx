@@ -26,6 +26,11 @@ const EMPTY_HERO = {
   imageUrl: "",
 };
 
+const EMPTY_HEADER_MENU_ITEM = {
+  label: "",
+  href: "",
+};
+
 const EMPTY_FEATURE = {
   title: "",
   description: "",
@@ -218,7 +223,197 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
         </CardHeader>
       </Card>
 
-      <Accordion type="multiple" defaultValue={["hero", "features", "faq", "contact", "seo"]}>
+      <Accordion
+        type="multiple"
+        defaultValue={["header", "hero", "features", "faq", "contact", "seo"]}
+      >
+        <AccordionItem value="header">
+          <AccordionTrigger>Cabecera (Menú y CTA)</AccordionTrigger>
+          <AccordionContent>
+            <Card>
+              <CardContent className="space-y-4 pt-6">
+                <Input
+                  placeholder="Texto de marca"
+                  value={payload.data.header.brandText}
+                  onChange={(event) => {
+                    updatePayload({
+                      ...payload,
+                      data: {
+                        ...payload.data,
+                        header: {
+                          ...payload.data.header,
+                          brandText: event.target.value,
+                        },
+                      },
+                    });
+                  }}
+                />
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Input
+                    placeholder="Texto CTA principal"
+                    value={payload.data.header.primaryCtaText}
+                    onChange={(event) => {
+                      updatePayload({
+                        ...payload,
+                        data: {
+                          ...payload.data,
+                          header: {
+                            ...payload.data.header,
+                            primaryCtaText: event.target.value,
+                          },
+                        },
+                      });
+                    }}
+                  />
+                  <Input
+                    placeholder="Enlace CTA principal"
+                    value={payload.data.header.primaryCtaHref}
+                    onChange={(event) => {
+                      updatePayload({
+                        ...payload,
+                        data: {
+                          ...payload.data,
+                          header: {
+                            ...payload.data.header,
+                            primaryCtaHref: event.target.value,
+                          },
+                        },
+                      });
+                    }}
+                  />
+                  <Input
+                    placeholder="Texto CTA secundario"
+                    value={payload.data.header.secondaryCtaText}
+                    onChange={(event) => {
+                      updatePayload({
+                        ...payload,
+                        data: {
+                          ...payload.data,
+                          header: {
+                            ...payload.data.header,
+                            secondaryCtaText: event.target.value,
+                          },
+                        },
+                      });
+                    }}
+                  />
+                  <Input
+                    placeholder="Enlace CTA secundario"
+                    value={payload.data.header.secondaryCtaHref}
+                    onChange={(event) => {
+                      updatePayload({
+                        ...payload,
+                        data: {
+                          ...payload.data,
+                          header: {
+                            ...payload.data.header,
+                            secondaryCtaHref: event.target.value,
+                          },
+                        },
+                      });
+                    }}
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <p className="text-sm font-medium">Items del menú</p>
+                  {payload.data.header.menu.map((item, index) => (
+                    <Card key={`menu-item-${index}`}>
+                      <CardContent className="grid gap-3 pt-6 sm:grid-cols-[1fr_1fr_auto] sm:items-center">
+                        <Input
+                          placeholder="Label"
+                          value={item.label}
+                          onChange={(event) => {
+                            const menu = payload.data.header.menu.map((menuItem, menuIndex) =>
+                              menuIndex === index
+                                ? { ...menuItem, label: event.target.value }
+                                : menuItem,
+                            );
+
+                            updatePayload({
+                              ...payload,
+                              data: {
+                                ...payload.data,
+                                header: {
+                                  ...payload.data.header,
+                                  menu,
+                                },
+                              },
+                            });
+                          }}
+                        />
+                        <Input
+                          placeholder="Href (ej: #beneficios o https://...)"
+                          value={item.href}
+                          onChange={(event) => {
+                            const menu = payload.data.header.menu.map((menuItem, menuIndex) =>
+                              menuIndex === index ? { ...menuItem, href: event.target.value } : menuItem,
+                            );
+
+                            updatePayload({
+                              ...payload,
+                              data: {
+                                ...payload.data,
+                                header: {
+                                  ...payload.data.header,
+                                  menu,
+                                },
+                              },
+                            });
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            updatePayload({
+                              ...payload,
+                              data: {
+                                ...payload.data,
+                                header: {
+                                  ...payload.data.header,
+                                  menu: payload.data.header.menu.filter((_, menuIndex) => menuIndex !== index),
+                                },
+                              },
+                            });
+                          }}
+                          disabled={payload.data.header.menu.length <= 1}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      updatePayload({
+                        ...payload,
+                        data: {
+                          ...payload.data,
+                          header: {
+                            ...payload.data.header,
+                            menu: [...payload.data.header.menu, EMPTY_HEADER_MENU_ITEM],
+                          },
+                        },
+                      });
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Agregar item de menú
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="hero">
           <AccordionTrigger>Hero Slider</AccordionTrigger>
           <AccordionContent>

@@ -9,6 +9,7 @@ type OptimizedMediaProps = {
   sizes?: string;
   priority?: boolean;
   quality?: number;
+  objectPosition?: string;
   fallbackLabel?: string;
   overlayClassName?: string;
 };
@@ -28,14 +29,16 @@ export function OptimizedMedia({
   sizes = "(max-width: 1024px) 100vw, 50vw",
   priority = false,
   quality = 76,
+  objectPosition = "center",
   fallbackLabel = "Reemplazar por imagen real en /public o desde admin.",
   overlayClassName,
 }: OptimizedMediaProps) {
   const normalizedSrc = src?.trim() ?? "";
+  const hasImageSource = normalizedSrc && (isLocalImageSource(normalizedSrc) || isRemoteImageSource(normalizedSrc));
 
   return (
     <div className={cn("relative overflow-hidden rounded-2xl", className)}>
-      {normalizedSrc && isLocalImageSource(normalizedSrc) ? (
+      {hasImageSource ? (
         <Image
           src={normalizedSrc}
           alt={alt}
@@ -44,18 +47,7 @@ export function OptimizedMedia({
           quality={quality}
           sizes={sizes}
           className="object-cover"
-        />
-      ) : null}
-
-      {normalizedSrc && isRemoteImageSource(normalizedSrc) ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={normalizedSrc}
-          alt={alt}
-          className="h-full w-full object-cover"
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          fetchPriority={priority ? "high" : "auto"}
+          style={{ objectPosition }}
         />
       ) : null}
 

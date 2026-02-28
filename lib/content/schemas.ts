@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { LANDING_LINKS } from "@/lib/landing/constants";
+
 const requiredText = z.string().trim().min(1);
 
 const optionalText = z
@@ -25,6 +27,38 @@ export const heroSlideSchema = z.object({
   imageUrl: optionalUrl,
 });
 
+export const headerMenuItemSchema = z.object({
+  label: requiredText,
+  href: requiredText,
+});
+
+function createDefaultHeaderConfig() {
+  return {
+    brandText: "Power Amazónica",
+    menu: [
+      { label: "Proyecto", href: "#proyecto" },
+      { label: "Beneficios", href: "#beneficios" },
+      { label: "FAQ", href: "#faq" },
+      { label: "Contacto", href: "#contacto" },
+    ],
+    primaryCtaText: "WhatsApp",
+    primaryCtaHref: LANDING_LINKS.whatsappHref,
+    secondaryCtaText: "Llamar",
+    secondaryCtaHref: LANDING_LINKS.telHref,
+  };
+}
+
+export const headerConfigSchema = z
+  .object({
+    brandText: requiredText,
+    menu: z.array(headerMenuItemSchema).max(8),
+    primaryCtaText: requiredText,
+    primaryCtaHref: requiredText,
+    secondaryCtaText: requiredText,
+    secondaryCtaHref: requiredText,
+  })
+  .default(createDefaultHeaderConfig);
+
 export const featureSchema = z.object({
   title: requiredText,
   description: requiredText,
@@ -44,6 +78,7 @@ export const contactSchema = z.object({
 });
 
 export const landingDataSchema = z.object({
+  header: headerConfigSchema,
   heroSlider: z.array(heroSlideSchema).min(1),
   features: z.array(featureSchema),
   faq: z.array(faqSchema),
