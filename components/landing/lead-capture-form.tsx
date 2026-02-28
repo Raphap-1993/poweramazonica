@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 type LeadCaptureFormProps = {
+  formId?: string;
   source: string;
   title: string;
   description: string;
@@ -21,6 +22,7 @@ type LeadFormValues = {
   phone: string;
   email: string;
   message: string;
+  website: string;
 };
 
 const EMPTY_VALUES: LeadFormValues = {
@@ -28,9 +30,11 @@ const EMPTY_VALUES: LeadFormValues = {
   phone: "",
   email: "",
   message: "",
+  website: "",
 };
 
 export function LeadCaptureForm({
+  formId,
   source,
   title,
   description,
@@ -57,6 +61,14 @@ export function LeadCaptureForm({
       return;
     }
 
+    if (values.website.trim()) {
+      setSuccess("Solicitud enviada. Te contactaremos pronto.");
+      return;
+    }
+
+    const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+    const sourceWithPath = `${source}:${pathname}`;
+
     setIsSubmitting(true);
 
     try {
@@ -70,7 +82,8 @@ export function LeadCaptureForm({
           phone: values.phone,
           email: values.email || undefined,
           message: values.message,
-          source,
+          source: sourceWithPath,
+          website: values.website,
         }),
       });
 
@@ -86,13 +99,20 @@ export function LeadCaptureForm({
         ...EMPTY_VALUES,
         message: defaultMessage,
       });
+    } catch {
+      setError("No se pudo enviar tu solicitud en este momento. Intenta nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3" aria-label={`Formulario ${source}`}>
+    <form
+      id={formId}
+      onSubmit={handleSubmit}
+      className="space-y-3"
+      aria-label={`Formulario ${source}`}
+    >
       <div>
         <h3 className={compact ? "text-lg font-semibold" : "text-2xl font-semibold"}>{title}</h3>
         <p className="text-sm text-muted-foreground">{description}</p>
@@ -107,6 +127,7 @@ export function LeadCaptureForm({
           value={values.name}
           onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
           placeholder="Tu nombre"
+          autoComplete="name"
           required
         />
       </div>
@@ -117,9 +138,14 @@ export function LeadCaptureForm({
         </label>
         <Input
           id={`${source}-phone`}
+          type="tel"
           value={values.phone}
           onChange={(event) => setValues((current) => ({ ...current, phone: event.target.value }))}
           placeholder="990 814 630"
+          autoComplete="tel"
+          inputMode="tel"
+          minLength={7}
+          maxLength={24}
           required
         />
       </div>
@@ -134,6 +160,7 @@ export function LeadCaptureForm({
           value={values.email}
           onChange={(event) => setValues((current) => ({ ...current, email: event.target.value }))}
           placeholder="tu-correo@dominio.com"
+          autoComplete="email"
         />
       </div>
 
@@ -151,8 +178,22 @@ export function LeadCaptureForm({
         />
       </div>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
+      <div className="sr-only" aria-hidden="true">
+        <label htmlFor={`${source}-website`}>Sitio web</label>
+        <Input
+          id={`${source}-website`}
+          type="text"
+          value={values.website}
+          onChange={(event) => setValues((current) => ({ ...current, website: event.target.value }))}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
+      <div aria-live="polite">
+        {error ? <p className="text-sm text-destructive">{error}</p> : null}
+        {success ? <p className="text-sm text-emerald-700">{success}</p> : null}
+      </div>
 
       <div className="flex flex-wrap gap-3">
         <Button type="submit" disabled={isSubmitting} aria-label="Enviar formulario de contacto">

@@ -27,7 +27,7 @@ export function LandingHeader({ header }: LandingHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-emerald-100/80 bg-white/92 shadow-[0_12px_30px_-24px_rgba(5,150,105,0.7)] backdrop-blur">
+    <header className="fixed inset-x-0 top-0 z-[80] border-b border-emerald-100/80 bg-white/92 shadow-[0_12px_30px_-24px_rgba(5,150,105,0.7)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
         <Link href="/" className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-emerald-900 sm:text-lg">
           <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-transparent">

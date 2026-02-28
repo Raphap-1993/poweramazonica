@@ -8,6 +8,17 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
+
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "website" in payload &&
+    typeof payload.website === "string" &&
+    payload.website.trim().length > 0
+  ) {
+    return NextResponse.json({ ok: true });
+  }
+
   const parsed = leadCreateSchema.safeParse(payload);
 
   if (!parsed.success) {

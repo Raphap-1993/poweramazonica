@@ -121,9 +121,8 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
     <main className="relative w-full">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-80 bg-[radial-gradient(circle,_rgba(132,204,22,0.18)_0%,_transparent_70%)]" />
 
-      <section className="relative z-40">
-        <LandingHeader header={data.header} />
-      </section>
+      <LandingHeader header={data.header} />
+      <div aria-hidden="true" className="h-[74px] sm:h-[78px]" />
 
       <section id="proyecto" className="relative z-10 scroll-mt-28">
         <PremiumHeroSlider slides={heroSlides} telHref={telHref} />
@@ -134,7 +133,10 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
           <BenefitsCarousel items={data.features} referenceImageUrl={referenceImageUrl} />
         </section>
 
-        <section className="relative z-10 overflow-hidden rounded-[2rem] border border-emerald-900/20 bg-emerald-950 px-5 py-6 shadow-[0_28px_80px_-55px_rgba(6,78,59,0.9)] sm:px-7 sm:py-8 lg:px-8">
+        <section
+          id="lead-form"
+          className="relative z-10 scroll-mt-28 overflow-hidden rounded-[2rem] border border-emerald-900/20 bg-emerald-950 px-5 py-6 shadow-[0_28px_80px_-55px_rgba(6,78,59,0.9)] sm:px-7 sm:py-8 lg:px-8"
+        >
           <OptimizedMedia
             src={referenceImageUrl}
             alt="Vista referencial de Santa Beatriz"
@@ -190,6 +192,7 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
             <Card className="border-white/20 bg-white/95 text-foreground shadow-xl">
               <CardContent className="pt-6">
                 <LeadCaptureForm
+                  formId="lead-capture-main"
                   source="hero-showcase"
                   title="Solicita asesoría personalizada"
                   description="Déjanos tus datos y te orientamos en el proceso de compra."
@@ -202,59 +205,70 @@ export function LandingPageContent({ data }: LandingPageContentProps) {
         </section>
 
         <section className="relative z-10 grid gap-6 rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-[0_22px_60px_-52px_rgba(5,150,105,0.8)] md:grid-cols-[1.02fr_0.98fr] md:p-7">
-        <div className="space-y-4">
-          <Badge variant="outline" className="border-emerald-200 text-emerald-900">
-            ¿Ya tienes proyecto o consulta?
-          </Badge>
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">
-            Resolvemos tu caso comercial con atención directa
-          </h2>
-          <p className="text-zinc-600">
-            Nuestro equipo te orienta según tu objetivo: compra para vivienda, inversión o
-            evaluación de financiamiento.
-          </p>
+          <div className="space-y-4">
+            <Badge variant="outline" className="border-emerald-200 text-emerald-900">
+              ¿Ya tienes proyecto o consulta?
+            </Badge>
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">
+              Resolvemos tu caso comercial con atención directa
+            </h2>
+            <p className="text-zinc-600">
+              Nuestro equipo te orienta según tu objetivo: compra para vivienda, inversión o
+              evaluación de financiamiento.
+            </p>
 
-          <div className="grid gap-3 text-sm text-zinc-600 sm:grid-cols-2">
-            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
-              <PhoneCall className="h-4 w-4 text-emerald-700" />
-              {phone}
-            </p>
-            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
-              <Mail className="h-4 w-4 text-emerald-700" />
-              {email}
-            </p>
-            <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2 sm:col-span-2">
-              <MapPin className="h-4 w-4 text-emerald-700" />
-              {address}
-            </p>
+            <div className="grid gap-3 text-sm text-zinc-600 sm:grid-cols-2">
+              <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                <PhoneCall className="h-4 w-4 text-emerald-700" />
+                {phone}
+              </p>
+              <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                <Mail className="h-4 w-4 text-emerald-700" />
+                {email}
+              </p>
+              <p className="flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2 sm:col-span-2">
+                <MapPin className="h-4 w-4 text-emerald-700" />
+                {address}
+              </p>
+            </div>
+
+            <div className="relative min-h-56 overflow-hidden rounded-2xl border border-emerald-100">
+              <OptimizedMedia
+                src={referenceImageUrl}
+                alt="Asesor comercial Power Amazónica"
+                sizes="(max-width: 1024px) 100vw, 48vw"
+                className="absolute inset-0 h-full w-full"
+                fallbackLabel="Colocar foto real del asesor en /public"
+              />
+            </div>
           </div>
 
-          <div className="relative min-h-56 overflow-hidden rounded-2xl border border-emerald-100">
-            <OptimizedMedia
-              src={referenceImageUrl}
-              alt="Asesor comercial Power Amazónica"
-              sizes="(max-width: 1024px) 100vw, 48vw"
-              className="absolute inset-0 h-full w-full"
-              fallbackLabel="Colocar foto real del asesor en /public"
-            />
-          </div>
-        </div>
-
-        <Card className="rounded-2xl border-emerald-100">
-          <CardHeader>
-            <CardTitle className="text-zinc-950">Te llamamos para orientarte</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <LeadCaptureForm
-              source="proyecto-consulta"
-              title="Déjanos tu consulta"
-              description="Comparte tu caso y agendamos contacto por llamada o WhatsApp."
-              whatsappHref={whatsappHref}
-              compact
-              submitLabel="Solicitar llamada"
-            />
-          </CardContent>
-        </Card>
+          <Card className="rounded-2xl border-emerald-100">
+            <CardHeader>
+              <CardTitle className="text-zinc-950">Un solo formulario, mayor conversión</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-zinc-600">
+                Para evitar duplicidad y mejorar el flujo E2E, usamos un formulario principal de
+                captura en la sección superior.
+              </p>
+              <div className="space-y-2 text-sm text-zinc-600">
+                <p>1. Completa tus datos en el formulario principal.</p>
+                <p>2. Recibimos tu lead en base de datos.</p>
+                <p>3. El equipo comercial te contacta por llamada o WhatsApp.</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild>
+                  <a href="#lead-form">Ir al formulario principal</a>
+                </Button>
+                <Button asChild variant="outline">
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    WhatsApp directo
+                  </a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         <section className="relative z-10 grid gap-6 lg:grid-cols-2">
