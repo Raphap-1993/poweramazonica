@@ -30,8 +30,13 @@ export function OptimizedMedia({
   overlayClassName,
 }: OptimizedMediaProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const normalizedSrc = normalizeImageSrc(src);
   const hasImageSource = isRenderableImageSrc(normalizedSrc) && failedSrc !== normalizedSrc;
+  const isImageLoaded = hasImageSource && loadedSrc === normalizedSrc;
+  const isUploadAsset = normalizedSrc.startsWith("/uploads/");
+  const showBackdrop = !isImageLoaded;
+  const showFallbackText = !hasImageSource;
 
   return (
     <div className={cn("relative overflow-hidden rounded-2xl", className)}>
@@ -43,13 +48,17 @@ export function OptimizedMedia({
           priority={priority}
           quality={quality}
           sizes={sizes}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          unoptimized={isUploadAsset}
           className="object-cover"
           style={{ objectPosition }}
+          onLoad={() => setLoadedSrc(normalizedSrc)}
           onError={() => setFailedSrc(normalizedSrc)}
         />
       ) : null}
 
-      {!hasImageSource ? (
+      {showBackdrop ? (
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(255,255,255,0.24),transparent_36%),radial-gradient(circle_at_82%_12%,rgba(255,255,255,0.2),transparent_30%),linear-gradient(140deg,#14532d,#3f6212)]" />
       ) : null}
 
@@ -60,7 +69,7 @@ export function OptimizedMedia({
         )}
       />
 
-      {!hasImageSource ? (
+      {showFallbackText ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center p-6 text-center">
           <p className="rounded-xl border border-white/35 bg-white/20 px-4 py-3 text-sm text-white backdrop-blur-md">
             {fallbackLabel}

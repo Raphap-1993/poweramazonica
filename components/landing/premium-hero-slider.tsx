@@ -14,6 +14,8 @@ type PremiumHeroSliderProps = {
   telHref: string;
 };
 
+const SLIDER_AUTOPLAY_MS = 5200;
+
 const quickHighlights = [
   {
     title: "Contrato notarial",
@@ -56,32 +58,36 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   const activeImagePosition = activeSlide.imagePosition?.trim() || "center center";
 
   useEffect(() => {
-    if (normalizedSlides.length <= 1) {
-      return;
-    }
+    const imageUrls = Array.from(
+      new Set(
+        normalizedSlides
+          .map((slide) => slide.imageUrl?.trim())
+          .filter((value): value is string => Boolean(value)),
+      ),
+    );
 
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % normalizedSlides.length);
-    }, 6500);
-
-    return () => window.clearInterval(intervalId);
-  }, [normalizedSlides.length]);
+    imageUrls.forEach((url) => {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.loading = "eager";
+      image.src = url;
+    });
+  }, [normalizedSlides]);
 
   useEffect(() => {
     if (normalizedSlides.length <= 1) {
       return;
     }
 
-    const nextIndex = (activeIndex + 1) % normalizedSlides.length;
-    const nextUrl = normalizedSlides[nextIndex]?.imageUrl?.trim();
-    if (!nextUrl) {
-      return;
-    }
+    const intervalId = window.setInterval(() => {
+      if (document.hidden) {
+        return;
+      }
+      setActiveIndex((current) => (current + 1) % normalizedSlides.length);
+    }, SLIDER_AUTOPLAY_MS);
 
-    const image = new window.Image();
-    image.decoding = "async";
-    image.src = nextUrl;
-  }, [activeIndex, normalizedSlides]);
+    return () => window.clearInterval(intervalId);
+  }, [normalizedSlides.length]);
 
   function goToPrevious() {
     setActiveIndex((current) =>
