@@ -55,6 +55,8 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
   const [isPublishing, setIsPublishing] = useState(false);
   const [uploadingHeroIndex, setUploadingHeroIndex] = useState<number | null>(null);
   const [heroUploadFiles, setHeroUploadFiles] = useState<Record<number, File | null>>({});
+  const [isUploadingHeaderLogo, setIsUploadingHeaderLogo] = useState(false);
+  const [headerLogoFile, setHeaderLogoFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -193,6 +195,53 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
     }
   }
 
+  async function uploadHeaderLogo() {
+    if (!headerLogoFile) {
+      setError("Selecciona un logo antes de subir.");
+      return;
+    }
+
+    setIsUploadingHeaderLogo(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", headerLogoFile);
+      formData.append("kind", "generic");
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json().catch(() => null)) as
+        | { error?: string; file?: { url: string } }
+        | null;
+
+      if (!response.ok || !data?.file?.url) {
+        setError(data?.error ?? "No se pudo subir el logo");
+        return;
+      }
+
+      setPayload((current) => ({
+        ...current,
+        data: {
+          ...current.data,
+          header: {
+            ...current.data.header,
+            logoUrl: data.file?.url,
+          },
+        },
+      }));
+
+      setHeaderLogoFile(null);
+      setMessage("Logo cargado correctamente.");
+    } finally {
+      setIsUploadingHeaderLogo(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -207,13 +256,26 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button onClick={() => void saveDraft()} disabled={isSaving || isPublishing || uploadingHeroIndex !== null}>
+            <Button
+              onClick={() => void saveDraft()}
+              disabled={
+                isSaving ||
+                isPublishing ||
+                uploadingHeroIndex !== null ||
+                isUploadingHeaderLogo
+              }
+            >
               {isSaving ? "Guardando..." : "Guardar borrador"}
             </Button>
             <Button
               variant="secondary"
               onClick={() => void onPublish()}
-              disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
+              disabled={
+                isSaving ||
+                isPublishing ||
+                uploadingHeroIndex !== null ||
+                isUploadingHeaderLogo
+              }
             >
               {isPublishing ? "Publicando..." : "Publicar"}
             </Button>
@@ -248,6 +310,42 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                     });
                   }}
                 />
+                <Input
+                  placeholder="URL logo (opcional)"
+                  value={payload.data.header.logoUrl ?? ""}
+                  onChange={(event) => {
+                    updatePayload({
+                      ...payload,
+                      data: {
+                        ...payload.data,
+                        header: {
+                          ...payload.data.header,
+                          logoUrl: event.target.value,
+                        },
+                      },
+                    });
+                  }}
+                />
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/avif"
+                    onChange={(event) => {
+                      setHeaderLogoFile(event.target.files?.[0] ?? null);
+                    }}
+                    className="sm:max-w-sm"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void uploadHeaderLogo()}
+                    disabled={!headerLogoFile || isUploadingHeaderLogo}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    {isUploadingHeaderLogo ? "Subiendo logo..." : "Subir logo"}
+                  </Button>
+                </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Input
@@ -499,6 +597,19 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                         onChange={(event) => {
                           const heroSlider = payload.data.heroSlider.map((item, itemIndex) =>
                             itemIndex === index ? { ...item, imageUrl: event.target.value } : item,
+                          );
+                          updatePayload({
+                            ...payload,
+                            data: { ...payload.data, heroSlider },
+                          });
+                        }}
+                      />
+                      <Input
+                        placeholder="Posición imagen (opcional, ej: center center, center 30%)"
+                        value={slide.imagePosition ?? ""}
+                        onChange={(event) => {
+                          const heroSlider = payload.data.heroSlider.map((item, itemIndex) =>
+                            itemIndex === index ? { ...item, imagePosition: event.target.value } : item,
                           );
                           updatePayload({
                             ...payload,
@@ -857,14 +968,18 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
       <div className="flex gap-3">
         <Button
           onClick={() => void saveDraft()}
-          disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
+          disabled={
+            isSaving || isPublishing || uploadingHeroIndex !== null || isUploadingHeaderLogo
+          }
         >
           {isSaving ? "Guardando..." : "Guardar borrador"}
         </Button>
         <Button
           variant="secondary"
           onClick={() => void onPublish()}
-          disabled={isSaving || isPublishing || uploadingHeroIndex !== null}
+          disabled={
+            isSaving || isPublishing || uploadingHeroIndex !== null || isUploadingHeaderLogo
+          }
         >
           {isPublishing ? "Publicando..." : "Publicar"}
         </Button>

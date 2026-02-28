@@ -4,6 +4,7 @@ import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
 export const defaultLandingData: LandingData = {
   header: {
     brandText: "Power Amazónica",
+    logoUrl: "",
     menu: [
       { label: "Proyecto", href: "#proyecto" },
       { label: "Beneficios", href: "#beneficios" },

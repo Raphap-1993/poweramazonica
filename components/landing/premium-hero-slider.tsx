@@ -53,6 +53,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
 
   const activeSlide = normalizedSlides[activeIndex];
   const heroMinHeight = "min-h-[clamp(460px,78svh,760px)]";
+  const activeImagePosition = activeSlide.imagePosition?.trim() || "center center";
 
   useEffect(() => {
     if (normalizedSlides.length <= 1) {
@@ -101,7 +102,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
           priority={activeIndex === 0}
           sizes="100vw"
           quality={74}
-          objectPosition="center 44%"
+          objectPosition={activeImagePosition}
           className="absolute inset-0 h-full w-full"
           overlayClassName="bg-gradient-to-r from-emerald-950/78 via-emerald-900/58 to-black/38"
           fallbackLabel="Colocar imagen panorámica real del proyecto en /public o subir desde admin."
@@ -149,7 +150,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-7xl items-end justify-between gap-3 px-4 pb-4 sm:px-6 sm:pb-5 lg:px-10">
+        <div className="absolute inset-x-0 bottom-[5.5rem] z-40 mx-auto flex w-full max-w-7xl items-end justify-between gap-3 px-4 sm:bottom-24 sm:px-6 lg:bottom-28 lg:px-10">
           <div className="flex items-center gap-2">
             {normalizedSlides.map((slide, index) => (
               <button
@@ -189,7 +190,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
         </div>
       </div>
 
-      <div className="relative z-30 mx-auto -mt-5 w-full max-w-7xl px-4 pb-3 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
+      <div className="relative z-30 mx-auto mt-0 w-full max-w-7xl px-4 pb-3 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
         <div className="grid gap-3 rounded-2xl border border-emerald-100 bg-white/96 p-3 shadow-xl backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
           {quickHighlights.map((item) => (
             <div key={item.title} className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-3">

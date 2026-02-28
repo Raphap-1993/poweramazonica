@@ -4,6 +4,7 @@ export type HeroSlide = {
   ctaText: string;
   ctaHref: string;
   imageUrl?: string;
+  imagePosition?: string;
 };
 
 export type HeaderMenuItem = {
@@ -13,6 +14,7 @@ export type HeaderMenuItem = {
 
 export type HeaderConfig = {
   brandText: string;
+  logoUrl?: string;
   menu: HeaderMenuItem[];
   primaryCtaText: string;
   primaryCtaHref: string;
