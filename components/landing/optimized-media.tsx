@@ -49,7 +49,7 @@ export function OptimizedMedia({
         />
       ) : null}
 
-      {!normalizedSrc ? (
+      {!hasImageSource ? (
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(255,255,255,0.24),transparent_36%),radial-gradient(circle_at_82%_12%,rgba(255,255,255,0.2),transparent_30%),linear-gradient(140deg,#14532d,#3f6212)]" />
       ) : null}
 
@@ -60,7 +60,7 @@ export function OptimizedMedia({
         )}
       />
 
-      {!normalizedSrc ? (
+      {!hasImageSource ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center p-6 text-center">
           <p className="rounded-xl border border-white/35 bg-white/20 px-4 py-3 text-sm text-white backdrop-blur-md">
             {fallbackLabel}
