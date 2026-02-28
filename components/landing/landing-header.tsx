@@ -30,17 +30,17 @@ export function LandingHeader({ header }: LandingHeaderProps) {
     <header className="sticky top-0 z-50 border-b border-emerald-100/80 bg-white/92 shadow-[0_12px_30px_-24px_rgba(5,150,105,0.7)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
         <Link href="/" className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-emerald-900 sm:text-lg">
-          <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-md border border-emerald-200 bg-white shadow-sm">
+          <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-transparent">
             {logoUrl ? (
               <Image
                 src={logoUrl}
                 alt={header.brandText}
                 fill
-                sizes="40px"
-                className="object-contain p-1"
+                sizes="48px"
+                className="object-contain p-0.5"
               />
             ) : (
-              <span className="text-xs font-bold text-emerald-800">
+              <span className="rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-xs font-bold text-emerald-800">
                 {header.brandText.slice(0, 2).toUpperCase()}
               </span>
             )}

@@ -94,8 +94,8 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-emerald-950">
-      <div className={`relative ${heroMinHeight}`}>
+    <section className="relative w-full overflow-visible">
+      <div className={`relative ${heroMinHeight} overflow-hidden`}>
         <OptimizedMedia
           src={activeSlide.imageUrl}
           alt={activeSlide.title}
@@ -190,7 +190,7 @@ export function PremiumHeroSlider({ slides, telHref }: PremiumHeroSliderProps) {
         </div>
       </div>
 
-      <div className="relative z-30 mx-auto mt-0 w-full max-w-7xl px-4 pb-3 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
+      <div className="relative z-30 mx-auto -mt-5 w-full max-w-7xl px-4 pb-0 sm:-mt-8 sm:px-6 lg:-mt-10 lg:px-10">
         <div className="grid gap-3 rounded-2xl border border-emerald-100 bg-white/96 p-3 shadow-xl backdrop-blur sm:grid-cols-2 lg:grid-cols-4">
           {quickHighlights.map((item) => (
             <div key={item.title} className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-3">
