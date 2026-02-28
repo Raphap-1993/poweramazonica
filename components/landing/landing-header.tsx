@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { HeaderConfig } from "@/lib/content/types";
+import { normalizeImageSrc } from "@/lib/media/normalize-image-src";
 
 type LandingHeaderProps = {
   header: HeaderConfig;
@@ -18,7 +19,9 @@ function isAnchor(href: string): boolean {
 
 export function LandingHeader({ header }: LandingHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const logoUrl = header.logoUrl?.trim();
+  const [failedLogoSrc, setFailedLogoSrc] = useState<string | null>(null);
+  const logoUrl = normalizeImageSrc(header.logoUrl);
+  const showLogoImage = Boolean(logoUrl) && failedLogoSrc !== logoUrl;
 
   function handleMenuClick(href: string) {
     if (isAnchor(href)) {
@@ -31,13 +34,14 @@ export function LandingHeader({ header }: LandingHeaderProps) {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
         <Link href="/" className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-emerald-900 sm:text-lg">
           <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-transparent">
-            {logoUrl ? (
+            {showLogoImage ? (
               <Image
                 src={logoUrl}
                 alt={header.brandText}
                 fill
                 sizes="48px"
                 className="object-contain p-0.5"
+                onError={() => setFailedLogoSrc(logoUrl)}
               />
             ) : (
               <span className="rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-xs font-bold text-emerald-800">

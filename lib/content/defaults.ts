@@ -18,9 +18,26 @@ export const defaultLandingData: LandingData = {
   },
   heroSlider: [
     {
-      title: "Proyecto Urb. Santa Beatriz",
-      subtitle: "Lotes de 150 m2 a 15 min del centro de Chanchamayo",
-      ctaText: "WhatsApp",
+      title: "Proyecto Urb. Santa Beatriz | Lotes de 150 m² en Chanchamayo",
+      subtitle:
+        "A 15 minutos del centro, con contrato notarial y papeles en regla para una compra formal.",
+      ctaText: "Agendar visita por WhatsApp",
+      ctaHref: LANDING_LINKS.whatsappHref,
+      imageUrl: "",
+    },
+    {
+      title: "Proyecto formal con ubicación estratégica",
+      subtitle:
+        "Pistas y veredas, servicios proyectados y cercanía a comercios, terminal e instituciones.",
+      ctaText: "Solicitar asesoría comercial",
+      ctaHref: LANDING_LINKS.whatsappHref,
+      imageUrl: "",
+    },
+    {
+      title: "Facilidades de pago para comprar tu lote",
+      subtitle:
+        "Crédito MiVivienda, cuota inicial mínima, al contado o financiamiento en cuotas hasta 60.",
+      ctaText: "Evaluar opción de pago",
       ctaHref: LANDING_LINKS.whatsappHref,
       imageUrl: "",
     },

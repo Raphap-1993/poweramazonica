@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 
 import { getPublishedLandingForDomain } from "@/lib/content";
 import { defaultLandingSeo } from "@/lib/content/defaults";
+import { normalizeImageSrc } from "@/lib/media/normalize-image-src";
 import { resolveSiteUrlFromHost } from "@/lib/seo/site-url";
 
 import "./globals.css";
@@ -35,7 +36,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = seo.description || landingSeoFallback.description;
   const ogTitle = seo.ogTitle || title;
   const ogDescription = seo.ogDescription || description;
-  const heroImage = landing?.data.heroSlider.find((slide) => slide.imageUrl?.trim())?.imageUrl;
+  const heroImage = normalizeImageSrc(
+    landing?.data.heroSlider.find((slide) => slide.imageUrl?.trim())?.imageUrl,
+  );
 
   return {
     metadataBase: new URL(siteUrl),

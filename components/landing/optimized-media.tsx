@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { isRenderableImageSrc, normalizeImageSrc } from "@/lib/media/normalize-image-src";
 import { cn } from "@/lib/utils";
 
 type OptimizedMediaProps = {
@@ -14,14 +15,6 @@ type OptimizedMediaProps = {
   overlayClassName?: string;
 };
 
-function isLocalImageSource(src: string): boolean {
-  return src.startsWith("/") && !src.startsWith("//");
-}
-
-function isRemoteImageSource(src: string): boolean {
-  return /^https?:\/\//i.test(src);
-}
-
 export function OptimizedMedia({
   src,
   alt,
@@ -33,8 +26,8 @@ export function OptimizedMedia({
   fallbackLabel = "Reemplazar por imagen real en /public o desde admin.",
   overlayClassName,
 }: OptimizedMediaProps) {
-  const normalizedSrc = src?.trim() ?? "";
-  const hasImageSource = normalizedSrc && (isLocalImageSource(normalizedSrc) || isRemoteImageSource(normalizedSrc));
+  const normalizedSrc = normalizeImageSrc(src);
+  const hasImageSource = isRenderableImageSrc(normalizedSrc);
 
   return (
     <div className={cn("relative overflow-hidden rounded-2xl", className)}>

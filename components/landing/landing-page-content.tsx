@@ -17,6 +17,7 @@ import { OptimizedMedia } from "@/components/landing/optimized-media";
 import { PremiumHeroSlider } from "@/components/landing/premium-hero-slider";
 import type { HeroSlide, LandingData } from "@/lib/content/types";
 import { LANDING_CONTACT, LANDING_LINKS } from "@/lib/landing/constants";
+import { normalizeImageSrc } from "@/lib/media/normalize-image-src";
 
 type LandingPageContentProps = {
   data: LandingData;
@@ -70,41 +71,118 @@ function toTelHref(phone: string): string {
   return normalized.startsWith("+") ? `tel:${normalized}` : `tel:+${normalized}`;
 }
 
+function normalizeCopyText(value?: string): string {
+  return (value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function looksGenericCopy(value: string): boolean {
+  const text = normalizeCopyText(value);
+  if (!text) {
+    return true;
+  }
+
+  const normalized = text.toLowerCase();
+  return (
+    normalized.length < 6 ||
+    /\b(slide|lorem|ipsum|demo|test|placeholder)\b/i.test(normalized) ||
+    /[a-záéíóúñ]\d+$/i.test(text) ||
+    /^cta$/i.test(normalized)
+  );
+}
+
+function hasAllKeywords(value: string, keywords: string[]): boolean {
+  const normalized = value.toLowerCase();
+  return keywords.every((keyword) => normalized.includes(keyword));
+}
+
+function normalizeCtaHref(value: string, fallbackHref: string): string {
+  const href = normalizeCopyText(value);
+  if (!href) {
+    return fallbackHref;
+  }
+
+  if (/^(https?:\/\/|tel:|mailto:|#)/i.test(href)) {
+    return href;
+  }
+
+  return fallbackHref;
+}
+
 function normalizeHeroSlides(dataSlides: HeroSlide[], whatsappHref: string): HeroSlide[] {
-  const curated: HeroSlide[] = [
+  const curatedSlides: HeroSlide[] = [
     {
-      title: "Proyecto Urb. Santa Beatriz",
-      subtitle: "Lotes de 150 m² a 15 minutos del centro de Chanchamayo.",
-      ctaText: "Agendar por WhatsApp",
+      title: "Proyecto Urb. Santa Beatriz | Lotes de 150 m² en Chanchamayo",
+      subtitle:
+        "A 15 minutos del centro de Chanchamayo, con contrato notarial y papeles en regla.",
+      ctaText: "Agendar visita por WhatsApp",
       ctaHref: whatsappHref,
       imageUrl: "",
     },
     {
-      title: "Formalidad y respaldo comercial",
+      title: "Proyecto formal con ubicación estratégica",
       subtitle:
-        "Contrato notarial, papeles en regla y acompañamiento directo en el proceso de compra.",
-      ctaText: "Hablar con un asesor",
+        "Pistas y veredas, servicios proyectados y entorno cercano a comercios e instituciones.",
+      ctaText: "Solicitar asesoría comercial",
       ctaHref: whatsappHref,
       imageUrl: "",
     },
     {
-      title: "Facilidades de pago para avanzar hoy",
+      title: "Facilidades de pago para comprar tu lote",
       subtitle:
-        "Opciones con Crédito MiVivienda, cuota inicial mínima, al contado o financiamiento en cuotas.",
-      ctaText: "Solicitar información",
+        "Opciones con Crédito MiVivienda, cuota inicial mínima, al contado o hasta 60 cuotas.",
+      ctaText: "Evaluar opción de pago",
       ctaHref: whatsappHref,
       imageUrl: "",
     },
   ];
 
-  const fromDb = dataSlides.filter((slide) => slide.title.trim() && slide.subtitle.trim());
-  const merged = [...fromDb, ...curated].slice(0, 3);
+  const subtitleKeywordMap = [
+    ["150", "chanchamayo"],
+    ["pistas", "servicios"],
+    ["mivivienda", "cuota"],
+  ];
 
-  return merged.map((slide, index) => ({
-    ...slide,
-    ctaText: slide.ctaText || curated[index]?.ctaText || "WhatsApp",
-    ctaHref: slide.ctaHref || whatsappHref,
-  }));
+  const usableSlides = dataSlides.filter(
+    (slide) => normalizeCopyText(slide.title) || normalizeCopyText(slide.subtitle),
+  );
+  const normalizedSlides = [...Array(3)].map((_, index) => {
+    const fallback = curatedSlides[index];
+    const candidate = usableSlides[index];
+
+    const candidateTitle = normalizeCopyText(candidate?.title);
+    const title =
+      candidateTitle && !looksGenericCopy(candidateTitle) ? candidateTitle : fallback.title;
+
+    const candidateSubtitle = normalizeCopyText(candidate?.subtitle);
+    const subtitle =
+      candidateSubtitle &&
+      !looksGenericCopy(candidateSubtitle) &&
+      hasAllKeywords(candidateSubtitle, subtitleKeywordMap[index] ?? [])
+        ? candidateSubtitle
+        : fallback.subtitle;
+
+    const candidateCta = normalizeCopyText(candidate?.ctaText);
+    const ctaText =
+      candidateCta &&
+      !looksGenericCopy(candidateCta) &&
+      !/^whatsapp\d*$/i.test(candidateCta)
+        ? candidateCta
+        : fallback.ctaText;
+
+    const imageUrl = normalizeImageSrc(candidate?.imageUrl || fallback.imageUrl);
+    const imagePosition = normalizeCopyText(candidate?.imagePosition);
+
+    return {
+      title,
+      subtitle,
+      ctaText,
+      ctaHref: normalizeCtaHref(candidate?.ctaHref ?? "", fallback.ctaHref || whatsappHref),
+      imageUrl,
+      imagePosition: imagePosition || undefined,
+    };
+  });
+
+  return normalizedSlides;
 }
 
 export function LandingPageContent({ data }: LandingPageContentProps) {

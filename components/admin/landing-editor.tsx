@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { landingDraftPayloadSchema } from "@/lib/content/schemas";
 import type { LandingDraftPayload, LandingPageRecord } from "@/lib/content/types";
+import { normalizeImageSrc } from "@/lib/media/normalize-image-src";
 
 const EMPTY_HERO = {
   title: "",
@@ -320,7 +321,7 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                         ...payload.data,
                         header: {
                           ...payload.data.header,
-                          logoUrl: event.target.value,
+                          logoUrl: normalizeImageSrc(event.target.value),
                         },
                       },
                     });
@@ -332,7 +333,7 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                     <div className="relative h-12 w-12 overflow-hidden rounded-md border bg-white">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={payload.data.header.logoUrl}
+                        src={normalizeImageSrc(payload.data.header.logoUrl)}
                         alt="Preview logo"
                         className="h-full w-full object-contain p-1"
                       />
@@ -610,7 +611,9 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                         value={slide.imageUrl ?? ""}
                         onChange={(event) => {
                           const heroSlider = payload.data.heroSlider.map((item, itemIndex) =>
-                            itemIndex === index ? { ...item, imageUrl: event.target.value } : item,
+                            itemIndex === index
+                              ? { ...item, imageUrl: normalizeImageSrc(event.target.value) }
+                              : item,
                           );
                           updatePayload({
                             ...payload,
