@@ -327,6 +327,20 @@ export function LandingEditor({ initialLanding }: LandingEditorProps) {
                   }}
                 />
 
+                {payload.data.header.logoUrl ? (
+                  <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3">
+                    <div className="relative h-12 w-12 overflow-hidden rounded-md border bg-white">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={payload.data.header.logoUrl}
+                        alt="Preview logo"
+                        className="h-full w-full object-contain p-1"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">Preview de logo para cabecera</p>
+                  </div>
+                ) : null}
+
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <Input
                     type="file"
