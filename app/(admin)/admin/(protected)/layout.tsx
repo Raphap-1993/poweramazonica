@@ -7,6 +7,7 @@ import { requireAuthenticatedAdminForPage } from "@/lib/auth/server";
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/landing", label: "Landing" },
+  { href: "/admin/leads", label: "Leads" },
   { href: "/admin/publishes", label: "Publicaciones" },
 ];
 
